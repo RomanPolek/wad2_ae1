@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+{% load static %}
+<meta name="viewport" content="width=device-width">
+<html lang="{{ LANGUAGE_CODE|default:'sk' }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+    <head>
+        <title>Exam Network</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="keywords" content="exams, quizzes, homeworks, test, tutor, student, university, school">
+        <meta name="description" content="">
+        <meta name="author" content="WAD 2 - Team 3b" >   
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="private" />
+        <meta http-equiv="expires" content="400" />
+        <link rel="stylesheet" href="{% static 'global/global.css' %}">
+        <link rel="icon" type="image/png" href="/media/icons/favicon.png">
+    </head>
+    <body style="height:100%; width: 100%; border-collapse:collapse; display : table; min-width: 320px;">
+        {% block page_content %}{% endblock %}
+        <script async src="{% static 'global/global.js' %}"></script>
+    </body>
+</html>
