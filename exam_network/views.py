@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'index.html', {})
+    return render(request, 'exam_network/index.html', {})
 
 
 # TODO: view isn't used anywhere
@@ -18,7 +18,6 @@ def user_login(request):
                 login(request, user)
                 return redirect(reverse('main_page:index'))
             return HttpResponse("Your Exam Network account is disabled.")
-
         print(f'Invalid login details: {username}, {password}')
         return HttpResponse("Invalid login details supplied.")
     else:

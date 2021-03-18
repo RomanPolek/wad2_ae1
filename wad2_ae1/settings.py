@@ -52,7 +52,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'wad2_ae1.urls'
 
-TEMPLATE_DIR = "wad2_ae1/templates/"
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+LOGIN_URL = "exam_network:login"
 
 TEMPLATES = [
     {
