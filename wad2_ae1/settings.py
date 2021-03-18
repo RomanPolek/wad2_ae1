@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main_page',
+    'exam_network',
 ]
 
 MIDDLEWARE = [
@@ -52,10 +52,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'wad2_ae1.urls'
 
+TEMPLATE_DIR = "wad2_ae1/templates/"
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["wad2_ae1/templates/"],
+        'DIRS': [
+            TEMPLATE_DIR,
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
