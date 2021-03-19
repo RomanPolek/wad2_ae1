@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 # TODO: some foreign keys are missing
 # TODO: user-related models
@@ -10,12 +11,29 @@ class Course(models.Model):
     description = models.CharField(max_length=50)
 
 
+# User of the website, either Student or Teacher
+class User(models.Model):
+    first_name = models.CharField(max_length=25)
+    last_name = models.CharField(max_length=25)
+    email = models.EmailField()
+
+    class Role(models.TextChoices):
+        STUDENT = 'Student', _('Student')
+        TEACHER = 'Teacher', _('Teacher')
+
+    role = models.CharField(
+        max_length=7, choices=Role.choices, default=Role.STUDENT
+    )
+
+    courses = models.ManyToManyField(Course)
+
+
 # Exam taken by a student
 # Questions are added to it using a many-to-many field
 class Exam(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     date_available = models.DateTimeField()
     deadline = models.DateTimeField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
 
 # Result of an exam taken by a student
@@ -25,7 +43,7 @@ class Exam(models.Model):
 # Used by Teachers for marking
 class Result(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    # student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 # Question to be asked as part of an exam
@@ -39,7 +57,7 @@ class Question(models.Model):
     choices = models.JSONField()
     # id of the correct answer
     # alternatively could use another JSONField if we allow more than one correct answer
-    answer = models.IntegerField()
+    correct_answer = models.IntegerField()
 
 
 # Answer given by a student while taking the exam, used for marking
