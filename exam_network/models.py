@@ -5,12 +5,6 @@ from django.utils.translation import gettext_lazy as _
 # TODO: user-related models
 
 
-# Course taken by many Students and taught by one (more than one?) Teacher
-class Course(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=50)
-
-
 # User of the website, either Student or Teacher
 class User(models.Model):
     first_name = models.CharField(max_length=25)
@@ -25,7 +19,22 @@ class User(models.Model):
         max_length=7, choices=Role.choices, default=Role.STUDENT
     )
 
-    courses = models.ManyToManyField(Course)
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.id})"
+
+
+# Course taken by many Students and taught by one (more than one?) Teacher
+class Course(models.Model):
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=50)
+
+    # TODO: change to students, add teacher field?
+    teacher = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='taught', null=True, blank=True)
+    students = models.ManyToManyField(User)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 # Exam taken by a student
