@@ -19,7 +19,6 @@ def user_login(request):
         print(f'Invalid login details: {username}')
         return HttpResponse("Invalid login details supplied.")
     else:
-        # TODO: check the names of html files when available
         return render(request, 'exam_network/login.html')
 
 def contact(request):
@@ -38,10 +37,23 @@ def show_exams(request, course_name):
         context_dict['course'] = course
         context_dict['exams'] = exams
 
-    except Category.DoesNotExist:
+    except Course.DoesNotExist:
         context_dict['course'] = None
         context_dict['exams'] = None
-    # TODO: check the names of html files when available
+    return render(request, 'exam_network/exams.html', context=context_dict)
+
+def show_exam(request, exam_name):
+    context_dict = {}
+    try:
+        # TODO: modify the ER Diagram and models to include exam name
+        exam = Exam.objects.get(exam=exam_name)
+        questions = Question.objects.filter(exam=exam)
+        context_dict['exam'] = exam
+        context_dict['questions'] = questions
+
+    except Exam.DoesNotExist:
+        context_dict['exams'] = None
+        context_dict['questions'] = None
     return render(request, 'exam_network/exam.html', context=context_dict)
 
 def handler404(request, exception):
