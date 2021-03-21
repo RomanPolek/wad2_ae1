@@ -99,9 +99,32 @@ class CourseAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class ExamAdmin(admin.ModelAdmin):
+    list_display = ('title', 'course', 'date_available', 'deadline')
+
+
+# TODO: do we need exams the question is added to or not?
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ('content', 'choices', 'correct_answer')
+
+
+class ResultAdmin(admin.ModelAdmin):
+    list_display = ('exam', 'student')
+
+    # Filter out teachers from the Student dropdown
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "student":
+            kwargs["queryset"] = User.objects.filter(role='Student')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = ('question', 'answer')
+
+
 admin.site.register(Course, CourseAdmin)
 admin.site.register(User, UserAdmin)
-admin.site.register(Exam)
-admin.site.register(Result)
-admin.site.register(Question)
-admin.site.register(Answer)
+admin.site.register(Exam, ExamAdmin)
+admin.site.register(Result, ResultAdmin)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Answer, AnswerAdmin)
