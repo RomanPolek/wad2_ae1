@@ -4,8 +4,6 @@ from exam_network.models import Course, User, Exam, Result, Question, Answer
 
 
 class UserAdminForm(forms.ModelForm):
-    # TODO: different views depending on user role
-    # TODO: courses taught for teachers
     course_set = forms.ModelMultipleChoiceField(
         label='Courses', queryset=Course.objects.all(), required=False,
         widget=admin.widgets.FilteredSelectMultiple(
@@ -20,8 +18,17 @@ class UserAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserAdminForm, self).__init__(*args, **kwargs)
+
         if self.instance and self.instance.pk:
-            self.fields['course_set'].initial = self.instance.course_set.all()
+            # Depending on the Role, the Course field should be either Courses taken or taught
+            # Set the initial field value to either 'course_set' for Students or 'taught' for Teachers
+            if self.instance.role == 'Student':
+                self.fields['course_set'].initial = self.instance.course_set.all()
+            else:
+                self.fields['course_set'].initial = self.instance.taught.all()
+
+            # Adjust the label depending on the role
+            self.fields['course_set'].label += ' taken' if self.instance.role == 'Student' else ' taught'
 
     def save(self, commit=True):
         user = super(UserAdminForm, self).save(commit=False)
@@ -30,7 +37,12 @@ class UserAdminForm(forms.ModelForm):
             user.save()
 
         if user.pk:
-            user.course_set.set(self.cleaned_data['course_set'])
+            # If changes were made we need to save them to the right field depending on the Role
+            if self.instance.role == 'Student':
+                user.course_set.set(self.cleaned_data['course_set'])
+            else:
+                user.taught.set(self.cleaned_data['course_set'])
+
             self.save_m2m()
 
         return user

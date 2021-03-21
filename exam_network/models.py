@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 # TODO: some foreign keys are missing
-# TODO: user-related models
 
 
 # User of the website, either Student or Teacher
@@ -28,7 +27,6 @@ class Course(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
 
-    # TODO: change to students, add teacher field?
     teacher = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='taught', null=True, blank=True)
     students = models.ManyToManyField(User)
