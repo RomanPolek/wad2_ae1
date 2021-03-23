@@ -34,14 +34,16 @@ class Course(models.Model):
 
 
 # Question to be asked as part of an exam
-# TODO: potentially an imagefield to add images as part of the question? not v needed, could do
 class Question(models.Model):
     # the actual text/content of the question
     content = models.CharField(max_length=250)
     # TODO: probably there'll be some checks needed but hey, variable numbers of choices are coool
-    choices = models.JSONField()
-    # id of the correct answer
-    # alternatively could use another JSONField if we allow more than one correct answer
+    choice_1 = models.CharField(max_length=300, blank=True)
+    choice_2 = models.CharField(max_length=300, blank=True)
+    choice_3 = models.CharField(max_length=300, blank=True)
+    choice_4 = models.CharField(max_length=300, blank=True)
+    choice_5 = models.CharField(max_length=300, blank=True)
+    # id of the correct answer (1 - 5)
     correct_answer = models.IntegerField()
 
     def __str__(self):

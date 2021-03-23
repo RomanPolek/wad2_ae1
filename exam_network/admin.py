@@ -105,7 +105,7 @@ class ExamAdmin(admin.ModelAdmin):
 
 # TODO: do we need exams the question is added to or not?
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ('content', 'choices', 'correct_answer')
+    list_display = ('content', 'correct_answer')
 
 
 class ResultAdmin(admin.ModelAdmin):
