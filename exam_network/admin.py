@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from exam_network.models import Course, User, Exam, Result, Question, Answer
+from exam_network.models import Course, User, Exam, Submission, Question, Answer
 
 
 class UserAdminForm(forms.ModelForm):
@@ -108,7 +108,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'correct_answer')
 
 
-class ResultAdmin(admin.ModelAdmin):
+class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('exam', 'student')
 
     # Filter out teachers from the Student dropdown
@@ -125,6 +125,6 @@ class AnswerAdmin(admin.ModelAdmin):
 admin.site.register(Course, CourseAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Exam, ExamAdmin)
-admin.site.register(Result, ResultAdmin)
+admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)

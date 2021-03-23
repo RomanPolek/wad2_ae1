@@ -74,12 +74,12 @@ class Answer(models.Model):
         return f"{self.question} - {self.answer}"
 
 
-# Result of an exam taken by a student
+# Submission of an exam taken by a student
 # Created when the students starts the exam
 # Answers to questions are added to it
 # Score can be calculated by accessing answers
 # Used by Teachers for marking
-class Result(models.Model):
+class Submission(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField()
