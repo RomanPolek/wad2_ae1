@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-
+from jsonfield import JSONField
 
 class Migration(migrations.Migration):
 
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('content', models.CharField(max_length=250)),
-                ('choices', models.JSONField()),
+                ('choices', JSONField()),
                 ('correct_answer', models.IntegerField()),
                 ('exam', models.ManyToManyField(to='exam_network.Exam')),
             ],
