@@ -30,6 +30,11 @@
     height: 100%;
     transform: scale(0.8);
 }
+
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 100%;
+}
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {
