@@ -17,11 +17,11 @@
     <body>
         <div id="header">
             <div id="loading_bar"></div>
-            <a href="/"><img class="exam_network_logo" src="/media/exam_network_logo.svg" alt="exam network logo"/></a>
+            <a href="{%url 'exam_network:index'%}"><img class="exam_network_logo" src="/media/exam_network_logo.svg" alt="exam network logo"/></a>
             <button id="header_login" class="blue_button">Log in</button>
         </div>
         <div id="header_signup" class="dark_blue_strip">
-            <button class="blue_button">Sign up for Exam Network</button>
+            <a href="{%url 'exam_network:signup'%}"><button class="blue_button">Sign up for Exam Network</button></a>
         </div>
         <div id="page_content">
             {%block page_content%}{%endblock%}
@@ -32,7 +32,7 @@
                 <a><button class="blue_button">Contact</button></a>
                 <a><button class="blue_button">Help</button></a>
             </div>
-            <a href="/"><img class="exam_network_logo" src="/media/exam_network_logo.svg" alt="exam network logo"/></a>
+            <a href="{%url 'exam_network:index'%}"><img class="exam_network_logo" src="/media/exam_network_logo.svg" alt="exam network logo"/></a>
         </footer>
         <script async src="{% static 'global/global.js' %}"></script>
         <script>document.getElementById("loading_bar").style.display = "none"</script>
