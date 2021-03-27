@@ -8,10 +8,10 @@
 #signup_wrapper > * {
     display: inline-block;
     vertical-align: top;
+    height: 420px;
 }
 
 #signup_wrapper img {
-    /*height must be in html style*/
     margin-bottom: 10px;
 }
 
@@ -22,4 +22,8 @@
 #signup_wrapper > div {
     margin-left: 25px;
     padding: 30px;
+}
+
+#signup_wrapper form {
+    width: 400px;
 }
