@@ -24,6 +24,6 @@
     padding: 30px;
 }
 
-#signup_wrapper form {
+#signup_wrapper > div > div {
     width: 400px;
 }
