@@ -99,6 +99,27 @@ img {
 .input_row > input {
     width: 60%;
 }
+
+.big_title {
+    font-size: xx-large;
+    font-weight: 500;
+    display: block;
+    margin: 0;
+    text-align: left;
+}
+
+.medium_title {
+    font-size: larger;
+    font-weight: 400;
+    margin: 0;
+    text-align: left;
+    display: block;
+}
+
+.two_split_content {
+    margin-top: 20px;
+    display: block;
+}
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {

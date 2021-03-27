@@ -2,11 +2,10 @@
 {% load static %}
 {%block two_split_image%}<img src="/media/online_education_img1_w2.svg" alt="student sign up image" style="height: 420px;">{%endblock%}
 {%block two_split_content%}
-<link rel="stylesheet" type="text/css" href="{% static 'signup/signup.css' %}">
 <div id="signup_content_wrapper">
-    <h1>Create Account,</h1>
-    <h3>Sign up to get started!</h3>
-    <form id="signup_content" method="POST">
+    <h1 class="big_title">Create Account,</h1>
+    <h3 class="medium_title">Sign up to get started!</h3>
+    <form class="two_split_content" method="POST" style="width: 400px;">
         {%csrf_token%}
         <div class="input_row">
             <span>Name</span>
