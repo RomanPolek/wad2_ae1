@@ -76,6 +76,29 @@ img {
     border-width: 1px;
     border-color: black;
 }
+
+.input_row {
+    padding: 7px;
+    width: calc(100% - 14px - 10px); /*minus padding and minus a few pixels*/
+    position: relative;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.input_row * {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.input_row > span {
+    width: 40%;
+    font-weight: 500;
+}
+
+.input_row > input {
+    width: 60%;
+}
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {
