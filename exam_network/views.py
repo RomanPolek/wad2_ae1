@@ -71,3 +71,6 @@ def handler404(request, exception):
 
 def signup(request):
     return render(request, 'exam_network/signup.html')
+
+def welcome_back(request):
+    return render(request, 'exam_network/welcome_back.html')
