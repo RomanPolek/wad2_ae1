@@ -14,40 +14,25 @@
         <link rel="stylesheet" href="{% static 'global/global.css' %}">
         <link rel="icon" type="image/png" href="/media/icons/favicon.ico">
     </head>
-    <body style="height:100%; width: 100%; border-collapse:collapse; display : table; min-width: 320px;">
-        <div>
-            <div id="header">
-                <div id="loading_bar"></div>
-                <div id="header_wrapper" style="position: relative;">
-                    <div id="small_navigation">
-                        <a class="no_select">Logout</a>
-                        <a class="no_select">Your Account</a>
-                        <a class="no_select">Contact Us</a>
-                    </div>
-                    <h1 id="website_title">Exam Network</h1>
-                    <div id="navigation_wrapper">
-                        <div id="navigation">
-                            <div style="border-left-style: none; border-top-left-radius: 26px; border-bottom-left-radius: 26px;"><a>Exams</a><div><a>test1</a><a>test2</a><a>test3</a></div></div><div><a>Results</a><div><a>test1</a><a>test2</a><a>test3</a></div></div><div style="border-right-style: none; border-top-right-radius: 26px; border-bottom-right-radius: 26px;"><a>Feedback</a><div><a>test1</a><a>test2</a><a>test3</a></div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% block page_content %}{% endblock %}
+    <body>
+        <div id="header">
+            <div id="loading_bar"></div>
+            <a href="/"><img class="exam_network_logo" src="/media/exam_network_logo.svg"></img></a>
+            <button id="header_login" class="blue_button">Log in</button>
         </div>
+        <div id="header_signup" class="dark_blue_strip">
+            <button class="blue_button">Sign up for Exam Network</button>
+        </div>
+        {%block page_content%}{%endblock%}
         <footer>
-            <div style="padding: 20px;">
-                <div id="sitemap">
-                    <a>todo</a>
-                    <a>todo</a>
-                </div>
-                <div id="authors">
-                    <a rel="author" href="mailto:2480607P@student.gla.ac.uk">Roman Polek</a>
-                    <a rel="author" href="mailto:2397741K@student.gla.ac.uk">Anna Kaminska</a>
-                    <a rel="author" href="mailto:2399448M@student.gla.ac.uk">Declan McBride</a>
-                    <a rel="author" href="mailto:2457183P@student.gla.ac.uk">Kajetan Puchalski</a>
-                </div>
+            <div class="dark_blue_strip">
+                <a><button class="blue_button">About</button></a>
+                <a><button class="blue_button">Contact</button></a>
+                <a><button class="blue_button">Help</button></a>
             </div>
+            <a href="/"><img class="exam_network_logo" src="/media/exam_network_logo.svg"></img></a>
         </footer>
         <script async src="{% static 'global/global.js' %}"></script>
+        <script>document.getElementById("loading_bar").style.display = "none"</script>
     </body>
 </html>
