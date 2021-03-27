@@ -33,17 +33,17 @@
 }
 
 /*have to wrap it in div with class wrapper to work*/
-.zoom_image {
-    transition: transform 1.5s;
-}
-
-.zoom_image:hover {
-    transform: scale(1.025);
-}
-
 .zoom_image_wrapper {
     overflow: hidden;
     border-radius: 5px;
+}
+
+.zoom_image_wrapper > img {
+    transition: transform 1.5s;
+}
+
+.zoom_image_wrapper > img:hover {
+    transform: scale(1.025);
 }
 
 * {
@@ -68,6 +68,13 @@ img {
 }
 *::-webkit-scrollbar-thumb:hover {
     background: rgb(54,99,158);
+}
+
+.black_border {
+    border-style: solid;
+    border-radius: 25px;
+    border-width: 1px;
+    border-color: black;
 }
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
