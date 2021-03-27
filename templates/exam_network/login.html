@@ -1,0 +1,21 @@
+{% extends "exam_network/two_split.html" %}
+{% load static %}
+{%block two_split_image_source%}/media/online_learning_img1_w3.svg{%endblock%}
+{%block two_split_content%}
+<div id="signup_content_wrapper">
+    <h1 class="big_title">Welcome back,</h1>
+    <h3 class="medium_title">Sign in to continue!</h3>
+    <form class="two_split_content" method="POST" style="margin-top: 70px;">
+        {%csrf_token%}
+        <div class="input_row">
+            <span>Email</span>
+            <input name="email">
+        </div>
+        <div class="input_row">
+            <span>Password</span>
+            <input name="password">
+        </div>
+        <button type="submit" class="blue_button" style="margin-top: 85px;">Log In</button>
+    </form>
+</div>
+{%endblock%}
