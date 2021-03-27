@@ -6,7 +6,7 @@
     padding: 15px 40px 15px 40px;
     border-radius: 2000px;
     font-size: large;
-    transition: transform 0.1s;
+    transition: transform 0.3s;
     cursor: pointer;
 }
 
@@ -32,9 +32,27 @@
     transform: scale(0.8);
 }
 
+/*have to wrap it in div with class wrapper to work*/
+.zoom_image {
+    transition: transform 1.5s;
+}
+
+.zoom_image:hover {
+    transform: scale(1.025);
+}
+
+.zoom_image_wrapper {
+    overflow: hidden;
+    border-radius: 5px;
+}
+
 * {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 100%;
+}
+
+img {
+    border-radius: 5px;
 }
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 

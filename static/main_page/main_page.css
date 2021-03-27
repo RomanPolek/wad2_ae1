@@ -8,9 +8,51 @@
     display: inline-block;
     height: 100%;
     padding: 3%;
-    width: 150px;
+    width: 170px;
+    font-weight: 500;
 }
 
 #logos img {
     height: 120px;
+}
+
+#slide_wrapper {
+    padding: 50px 30px 0 30px;
+    text-align: center;
+}
+
+.slide {
+    min-height: 400px;
+    max-width: 100%;
+    padding-bottom: 30px;
+    display: inline-block;
+}
+
+.slide img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.slide * {
+    display: inline-block;
+}
+
+.slide > * {
+    float: left;
+}
+
+.slide .slide_content {
+    width: 400px;
+    padding: 0px 0px 0px 20px;
+}
+
+.slide p, .slide h1 {
+    text-align: left;
+}
+
+.slide h1 {
+    display: block;
+    font-size: x-large;
+    font-weight: 500;
+    margin-bottom: 0;
 }
