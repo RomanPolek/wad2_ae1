@@ -24,6 +24,7 @@
     width: 100%;
     padding: 5px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .exam_network_logo {
@@ -38,13 +39,20 @@
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {
+    position: relative;
     height:100%;
     width: 100%;
     border-collapse:collapse;
     display : table;
     min-width: 320px;
     margin: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    background-color: rgb(168,206,255);
+}
+
+#page_content {
+    padding-bottom: 15rem; /*footer height*/
+    background-color: white;
 }
 
 footer {
@@ -55,7 +63,7 @@ footer {
     background-color: rgb(168,206,255);
     -webkit-box-shadow: 0px -1px 5px -1px rgba(0,0,0,0.35) !important;
     -moz-box-shadow: 0px -1px 5px -1px rgba(0,0,0,0.35) !important;
-    box-shadow: 0px -1px 5px -1px rgba(0,0,0,0.35) !important;
+    box-shadow: 0px -1px 5px -1px rgba(110, 79, 79, 0.35) !important;
     text-align: center;
 }
 
