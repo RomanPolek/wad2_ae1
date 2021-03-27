@@ -1,0 +1,16 @@
+#logos {
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+#logos > div {
+    display: inline-block;
+    height: 100%;
+    padding: 3%;
+    width: 150px;
+}
+
+#logos img {
+    height: 120px;
+}
