@@ -54,6 +54,21 @@
 img {
     border-radius: 5px;
 }
+
+/*custom scrollbar*/
+*::-webkit-scrollbar {
+    width: 10px;
+}
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+*::-webkit-scrollbar-thumb {
+    background: rgb(131, 131, 131);
+    border-radius: 100px;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background: rgb(54,99,158);
+}
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {
