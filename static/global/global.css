@@ -96,7 +96,7 @@ footer {
     background-color: rgb(168,206,255);
     -webkit-box-shadow: 0px -1px 5px -1px rgba(0,0,0,0.35) !important;
     -moz-box-shadow: 0px -1px 5px -1px rgba(0,0,0,0.35) !important;
-    box-shadow: 0px -1px 5px -1px rgba(110, 79, 79, 0.35) !important;
+    box-shadow: 0px -5px 5px -5px rgba(110, 79, 79, 0.35) !important;
     text-align: center;
 }
 
