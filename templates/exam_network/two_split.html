@@ -1,0 +1,13 @@
+{% extends "exam_network/base.html" %}
+{% block page_content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'two_split/two_split.css' %}">
+<div style="text-align: center;">
+    <div id="signup_wrapper">
+        {% block two_split_image%}{%endblock%}
+        <div class="black_border">
+            {% block two_split_content%}{%endblock%}
+        </div>
+    </div>
+</div>
+{% endblock %}

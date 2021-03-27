@@ -1,0 +1,29 @@
+
+#signup_wrapper {
+    text-align: center;
+    display: inline-block;
+    padding: 80px 5px 80px 5px;
+}
+
+#signup_wrapper * {
+    display: inline-block;
+}
+
+#signup_wrapper > * {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#signup_wrapper img {
+    /*height must be in html style*/
+    margin-bottom: 10px;
+}
+
+#signup_wrapper > div {
+    box-sizing: border-box;
+}
+
+#signup_wrapper > div {
+    margin-left: 25px;
+    padding: 30px;
+}

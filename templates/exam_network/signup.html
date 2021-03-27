@@ -1,38 +1,34 @@
-{% extends "exam_network/base.html" %}
-{% block page_content %}
+{% extends "exam_network/two_split.html" %}
 {% load static %}
+{%block two_split_image%}<img src="/media/online_education_img1_w2.svg" alt="student sign up image" style="height: 420px;">{%endblock%}
+{%block two_split_content%}
 <link rel="stylesheet" type="text/css" href="{% static 'signup/signup.css' %}">
-<div style="text-align: center;">
-    <div id="signup_wrapper">
-        <img src="/media/online_education_img1_w2.svg" alt="student sign up image">
-        <div id="signup_content_wrapper" class="black_border">
-            <h1>Create Account,</h1>
-            <h3>Sign up to get started!</h3>
-            <form id="signup_content" method="POST">
-                {%csrf_token%}
-                <div class="input_row">
-                    <span>Name</span>
-                    <input name="first_name">
-                </div>
-                <div class="input_row">
-                    <span>Surname</span>
-                    <input name="last_name">
-                </div>
-                <div class="input_row">
-                    <span>Email</span>
-                    <input name="email">
-                </div>
-                <div class="input_row">
-                    <span>Password</span>
-                    <input name="password">
-                </div>
-                <div class="input_row">
-                    <span>Confirm Password</span>
-                    <input name="confirm_password">
-                </div>
-                <button type="submit" class="blue_button" style="margin-top: 30px;">Sign Up</button>
-            </form>
+<div id="signup_content_wrapper">
+    <h1>Create Account,</h1>
+    <h3>Sign up to get started!</h3>
+    <form id="signup_content" method="POST">
+        {%csrf_token%}
+        <div class="input_row">
+            <span>Name</span>
+            <input name="first_name">
         </div>
-    </div>
+        <div class="input_row">
+            <span>Surname</span>
+            <input name="last_name">
+        </div>
+        <div class="input_row">
+            <span>Email</span>
+            <input name="email">
+        </div>
+        <div class="input_row">
+            <span>Password</span>
+            <input name="password">
+        </div>
+        <div class="input_row">
+            <span>Confirm Password</span>
+            <input name="confirm_password">
+        </div>
+        <button type="submit" class="blue_button" style="margin-top: 30px;">Sign Up</button>
+    </form>
 </div>
-{% endblock %}
+{%endblock%}
