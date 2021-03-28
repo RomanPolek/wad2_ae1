@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
+from .models import Exam, Course, Question
 
 def index(request):
     return render(request, 'exam_network/index.html', {})
@@ -85,6 +86,6 @@ def add_students(request):
 def about_us(request):
     return render(request, 'exam_network/about_us.html')
 
-def contact(request):
-    return render(request, 'exam_network/contact.html')
+def exam_result(request):
+    return render(request, 'exam_network/exam_result.html')
 ##Added by Roman. You can modify these views. I just used them for frontend development##
