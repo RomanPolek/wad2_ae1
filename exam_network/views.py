@@ -76,10 +76,11 @@ def signup(request):
 def welcome_back(request):
     return render(request, 'exam_network/welcome_back.html')
 
-def welcome_back(request):
-    return render(request, 'exam_network/welcome_back.html')
-
 def add_course(request):
     return render(request, 'exam_network/add_course.html')
+
+def add_students(request):
+    return render(request, 'exam_network/add_students.html')
+
 
 ##Added by Roman. You can modify these views. I just used them for frontend development##
