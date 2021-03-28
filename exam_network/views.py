@@ -69,8 +69,17 @@ def handler404(request, exception):
     return render(request, 'exam_network/handler404.html', status=404)
 
 
+##Added by Roman. You can modify these views. I just used them for frontend development##
 def signup(request):
     return render(request, 'exam_network/signup.html')
 
 def welcome_back(request):
     return render(request, 'exam_network/welcome_back.html')
+
+def welcome_back(request):
+    return render(request, 'exam_network/welcome_back.html')
+
+def add_course(request):
+    return render(request, 'exam_network/add_course.html')
+
+##Added by Roman. You can modify these views. I just used them for frontend development##
