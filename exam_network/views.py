@@ -82,5 +82,6 @@ def add_course(request):
 def add_students(request):
     return render(request, 'exam_network/add_students.html')
 
-
+def about_us(request):
+    return render(request, 'exam_network/about_us.html')
 ##Added by Roman. You can modify these views. I just used them for frontend development##
