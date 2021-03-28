@@ -1,5 +1,5 @@
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
-.blue_button {
+.blue_button, .gray_button {
     color: white;
     background-color: rgb(54,99,158);
     border-style: none;
@@ -8,15 +8,20 @@
     font-size: large;
     transition: transform 0.3s;
     cursor: pointer;
+    margin: 5px;
 }
 
-.blue_button:focus {
+.blue_button:focus, .gray_button:focus {
     border-style: none;
     outline: none;
 }
 
-.blue_button:hover {
+.blue_button:hover, .gray_button:hover {
     transform: scale(1.1);
+}
+
+.gray_button {
+    background-color: rgb(131, 131, 131);
 }
 
 .dark_blue_strip {
