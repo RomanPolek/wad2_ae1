@@ -1,0 +1,21 @@
+{% extends "exam_network/two_split.html" %}
+{% load static %}
+{%block two_split_image_source%}/media/online_exams_img1_w4.svg{%endblock%}
+{%block two_split_content%}
+<div id="signup_content_wrapper">
+    <h1 class="big_title">Add new course</h1>
+    <h3 class="medium_title">Please enter the details</h3>
+    <form class="two_split_content" method="POST" style="margin-top: 40px;">
+        {%csrf_token%}
+        <div class="input_row">
+            <span>Course Name</span>
+            <input name="course_name">
+        </div>
+        <div class="input_row">
+            <span>Details</span>
+            <textarea name="details" cols="30" rows="6" style="resize: none;"></textarea>
+        </div>
+        <button type="submit" class="blue_button" style="margin-top: 20px; float: right;">Add</button>
+    </form>
+</div>
+{%endblock%}
