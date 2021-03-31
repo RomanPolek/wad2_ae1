@@ -1,0 +1,56 @@
+
+#course_navigator {
+    padding: 0px 50px 50px 50px;
+    margin-right: 20px;
+    width: 300px;
+}
+
+#course_navigator > *{
+    display: block;
+    margin: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+#exams_wrapper {
+    text-align: center;
+    padding-top: 50px;
+    margin-bottom: 50px;
+}
+
+#exams_wrapper > * {
+    text-align: left;
+    display: inline-block;
+}
+
+#course_explorer {
+    margin-left: 20px;
+    vertical-align: top;
+    width: 450px;
+}
+
+#course_explorer > * {
+    padding: 20px;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#course_explorer h1 {
+    font-weight: 500;
+    font-size: x-large;
+    margin-top: 0;
+}
+
+#course_explorer p {
+    padding-left: 0px;
+    margin-bottom: 0;
+    margin-top: 5px;
+    padding-right: 9px;
+    display: inline-block;
+}
+
+#course_explorer span {
+    font-weight: 600;
+    font-size: large;
+}
