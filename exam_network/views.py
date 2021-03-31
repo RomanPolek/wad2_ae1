@@ -91,4 +91,7 @@ def exam_result(request):
 
 def exams(request):
     return render(request, 'exam_network/exams.html')
+
+def help(request):
+    return render(request, 'exam_network/help.html')
 ##Added by Roman. You can modify these views. I just used them for frontend development##
