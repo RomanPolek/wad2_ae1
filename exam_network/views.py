@@ -88,4 +88,7 @@ def about_us(request):
 
 def exam_result(request):
     return render(request, 'exam_network/exam_result.html')
+
+def exams(request):
+    return render(request, 'exam_network/exams.html')
 ##Added by Roman. You can modify these views. I just used them for frontend development##
