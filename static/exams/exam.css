@@ -1,0 +1,48 @@
+#exam_wrapper {
+    max-width: 900px;
+    margin: auto;
+    padding: 50px 10px 50px 10px;
+}
+
+#exam_title {
+    padding: 20px;
+    text-align: center;
+    font-size: large;
+}
+
+#exam_title h1 {
+    font-size: x-large;
+    margin-top: 0;
+}
+
+#exam_title * {
+    text-align: center;
+}
+
+#exam_title p {
+    margin-bottom: 0;
+}
+
+#exam_wrapper div{
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.question {
+    padding: 20px;
+}
+
+.question h1 {
+    font-size: medium;
+    font-weight: 500;
+    margin: 0;
+}
+
+.question p {
+    margin-top: 7px;
+}
+
+.question label {
+    display: block;
+    margin: 10px;
+}

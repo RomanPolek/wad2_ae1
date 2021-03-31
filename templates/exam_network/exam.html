@@ -1,0 +1,53 @@
+{% extends "exam_network/base.html" %}
+{% block page_content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'exams/exam.css' %}">
+<div id="exam_wrapper">
+    <div id="exam_title" class="black_border">
+        <h1>Course Name Exam 1</h1>
+        <p class="text">Available from 26.03.2021 13:30 to 27.03.2021 13:30</p>
+    </div>
+    <form method="POST">
+        <div class="question black_border">
+            <h1>Question 1</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+            <label><input type="radio" name="question_1"> Answer 1</label>
+            <label><input type="radio" name="question_1"> Answer 2</label>
+            <label><input type="radio" name="question_1"> Answer 3</label>
+            <label><input type="radio" name="question_1"> Answer 4</label>
+            <label><input type="radio" name="question_1"> Answer 5</label>
+        </div>
+        <div class="question black_border">
+            <h1>Question 2</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+            <label><input type="radio" name="question_2"> Answer 1</label>
+            <label><input type="radio" name="question_2"> Answer 2</label>
+            <label><input type="radio" name="question_2"> Answer 3</label>
+            <label><input type="radio" name="question_2"> Answer 4</label>
+            <label><input type="radio" name="question_2"> Answer 5</label>
+        </div>
+        <div class="question black_border">
+            <h1>Question 3</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+            <label><input type="radio" name="question_3"> Answer 1</label>
+            <label><input type="radio" name="question_3"> Answer 2</label>
+            <label><input type="radio" name="question_3"> Answer 3</label>
+            <label><input type="radio" name="question_3"> Answer 4</label>
+            <label><input type="radio" name="question_3"> Answer 5</label>
+        </div>
+        <div class="question black_border">
+            <h1>Question 4</h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
+            <label><input type="radio" name="question_4"> Answer 1</label>
+            <label><input type="radio" name="question_4"> Answer 2</label>
+            <label><input type="radio" name="question_4"> Answer 3</label>
+            <label><input type="radio" name="question_4"> Answer 4</label>
+            <label><input type="radio" name="question_4"> Answer 5</label>
+        </div>
+        <div style="text-align: right;">
+            <button class="gray_button">Cancel</button>
+            <button class="blue_button">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
