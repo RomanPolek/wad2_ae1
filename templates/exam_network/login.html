@@ -4,7 +4,7 @@
 <div>
     <h1 class="big_title">Welcome back,</h1>
     <h3 class="medium_title">Sign in to continue!</h3>
-    <form class="two_split_content" method="POST" style="margin-top: 70px;">
+    <form class="two_split_content" method="POST" style="margin-top: 70px;" id="login_form">
         {%csrf_token%}
         <div class="input_row">
             <span>Email</span>
@@ -14,7 +14,8 @@
             <span>Password</span>
             <input name="password">
         </div>
-        <button type="submit" class="blue_button" style="margin-top: 85px;">Log In</button>
     </form>
+    <a href="{%url 'exam_network:index'%}"><button class="gray_button">Cancel</button></a>
+    <button type="submit" class="blue_button" style="margin-top: 85px;" form="login_form">Log In</button>
 </div>
 {%endblock%}
