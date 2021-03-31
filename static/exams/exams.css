@@ -2,7 +2,7 @@
 #course_navigator {
     padding: 0px 50px 50px 50px;
     margin-right: 20px;
-    width: 300px;
+    width: 350px;
 }
 
 #course_navigator > *{
@@ -53,4 +53,50 @@
 #course_explorer span {
     font-weight: 600;
     font-size: large;
+}
+
+#statistics  {
+   white-space: nowrap;
+   padding: 20px;
+   box-sizing: border-box;
+}
+
+#statistics > div {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+}
+
+#statistics p {
+    display: inline-block;
+}
+
+#statistics h1 {
+    font-size: large;
+    margin-top: 0;
+}
+
+#statistics h5 {
+    font-size: medium;
+    margin-top: 0;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#statistics > div:first-of-type {
+    border-right-style: solid;
+    border-color: black;
+    border-width: 1px;
+}
+
+#statistics p {
+    font-size: small;
+    margin: 0;
+    padding-right: 9px;
+}
+
+#statistics > div > div {
+    text-align: left;
+    display: inline-block;
 }
