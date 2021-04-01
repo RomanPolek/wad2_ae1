@@ -83,9 +83,6 @@ def signup(request):
     else:
         return render(request, 'exam_network/signup.html')
 
-def welcome_back(request):
-    return render(request, 'exam_network/welcome_back.html')
-
 def add_course(request):
     return render(request, 'exam_network/add_course.html')
 
