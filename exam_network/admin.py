@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django import forms
-from exam_network.models import Course, User, Exam, Submission, Question, Answer
+from exam_network.models import Course, Profile, Exam, Submission, Question, Answer
+from django.contrib.auth.models import User
 
-
-class UserAdminForm(forms.ModelForm):
+class ProfileAdminForm(forms.ModelForm):
     course_set = forms.ModelMultipleChoiceField(
         label='Courses', queryset=Course.objects.all(), required=False,
         widget=admin.widgets.FilteredSelectMultiple(
@@ -13,7 +13,7 @@ class UserAdminForm(forms.ModelForm):
     )
 
     class Meta:
-        model = User
+        model = Profile
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -28,7 +28,7 @@ class UserAdminForm(forms.ModelForm):
                 self.fields['course_set'].initial = self.instance.taught.all()
 
             # Adjust the label depending on the role
-            self.fields['course_set'].label += ' taken' if self.instance.role == 'Student' else ' taught'
+            self.fields['course_set'].label += ' taken' if self.instance.role == 'S' else ' taught'
 
     def save(self, commit=True):
         user = super(UserAdminForm, self).save(commit=False)
@@ -38,7 +38,7 @@ class UserAdminForm(forms.ModelForm):
 
         if user.pk:
             # If changes were made we need to save them to the right field depending on the Role
-            if self.instance.role == 'Student':
+            if self.instance.role == 'S':
                 user.course_set.set(self.cleaned_data['course_set'])
             else:
                 user.taught.set(self.cleaned_data['course_set'])
@@ -49,15 +49,15 @@ class UserAdminForm(forms.ModelForm):
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'role')
-    form = UserAdminForm
-    fields = ['first_name', 'last_name', 'email', 'role', 'course_set']
+    list_display = ('role',)
+    form = ProfileAdminForm
+    fields = ['role']
 
 
 class CourseAdminForm(forms.ModelForm):
     students = forms.ModelMultipleChoiceField(
         # Filters out Teachers from the Student picker
-        label='Students', queryset=User.objects.filter(role='Student'),
+        label='Students', queryset=User.objects.filter(profile__role='S'),
         required=False,
         widget=admin.widgets.FilteredSelectMultiple(
             verbose_name='Students',
@@ -114,7 +114,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     # Filter out teachers from the Student dropdown
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "student":
-            kwargs["queryset"] = User.objects.filter(role='Student')
+            kwargs["queryset"] = User.objects.filter(profile__role='S')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -123,7 +123,7 @@ class AnswerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Course, CourseAdmin)
-admin.site.register(User, UserAdmin)
+admin.site.register(Profile, UserAdmin)
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Question, QuestionAdmin)

@@ -1,24 +1,28 @@
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-
-# User of the website, either Student or Teacher
-class User(models.Model):
-    first_name = models.CharField(max_length=25)
-    last_name = models.CharField(max_length=25)
-    email = models.EmailField()
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     class Role(models.TextChoices):
-        STUDENT = 'Student', _('Student')
-        TEACHER = 'Teacher', _('Teacher')
+        STUDENT = ('S', 'Student')
+        TEACHER = ('T', 'Teacher')
 
-    role = models.CharField(
-        max_length=7, choices=Role.choices, default=Role.STUDENT
-    )
+    role = models.CharField(max_length=1, choices=Role.choices, default=Role.STUDENT)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.user.first_name} {self.user.last_name}"
 
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 # Course taken by many Students and taught by one (more than one?) Teacher
 class Course(models.Model):
