@@ -17,21 +17,21 @@ class ProfileAdminForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(UserAdminForm, self).__init__(*args, **kwargs)
+        super(ProfileAdminForm, self).__init__(*args, **kwargs)
 
         if self.instance and self.instance.pk:
             # Depending on the Role, the Course field should be either Courses taken or taught
             # Set the initial field value to either 'course_set' for Students or 'taught' for Teachers
-            if self.instance.role == 'Student':
+            if self.instance.profile.role == 'Student':
                 self.fields['course_set'].initial = self.instance.course_set.all()
             else:
                 self.fields['course_set'].initial = self.instance.taught.all()
 
             # Adjust the label depending on the role
-            self.fields['course_set'].label += ' taken' if self.instance.role == 'S' else ' taught'
+            self.fields['course_set'].label += ' taken' if self.instance.profile.role == 'S' else ' taught'
 
     def save(self, commit=True):
-        user = super(UserAdminForm, self).save(commit=False)
+        user = super(ProfileAdminForm, self).save(commit=False)
 
         if commit:
             user.save()
@@ -47,11 +47,17 @@ class ProfileAdminForm(forms.ModelForm):
 
         return user
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('role',)
+    inlines = (ProfileInline, )
+    list_display = ('username', 'email', 'first_name', 'last_name')
     form = ProfileAdminForm
-    fields = ['role']
+    fields = ['username', 'password', 'email', 'first_name', 'last_name']
 
 
 class CourseAdminForm(forms.ModelForm):
@@ -123,8 +129,10 @@ class AnswerAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Course, CourseAdmin)
-admin.site.register(Profile, UserAdmin)
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 admin.site.register(Exam, ExamAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(Profile)
