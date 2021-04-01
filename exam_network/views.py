@@ -129,3 +129,6 @@ def exam(request, slug):
 
 def help(request):
     return render(request, 'exam_network/help.html')
+
+def welcome(request):
+    return render(request, 'exam_network/welcome.html')

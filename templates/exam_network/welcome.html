@@ -1,0 +1,9 @@
+{% extends "exam_network/two_split.html" %}
+{%block two_split_image_source%}/media/online_exams_img1_w4.svg{%endblock%}
+{%block two_split_content%}
+<div id="signup_content_wrapper">
+    <h1 class="big_title" style="font-size: x-large;">Welcome to Exam Network!</h1>
+    <h3 class="medium_title">Good luck with your exams!</h3>
+    <a href="{%url 'exam_network:index'%}"><button class="blue_button" style="margin-top: 260px;">Home</button></a>
+</div>
+{%endblock%}
