@@ -4,10 +4,52 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from .models import Exam, Course, Question
+from django.contrib.auth.models import User
+
+def error(request, message, error):
+    return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
 
 def index(request):
     return render(request, 'exam_network/index.html', {})
 
+def signup(request):
+    if request.user.is_authenticated:
+        return error(request, "you are already logged in", 403)
+    elif request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        username = request.POST.get("email")
+        role = request.POST.get("role")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        #checks
+        if password != confirm_password:
+            return error(request, "the passwords do not match", 403)
+        if password == None or password.strip() == "":
+            return error(request, "the password is empty", 403)
+        if role != "S" and role != "T":
+            return error(request, "the role is invalid", 403)
+        if role != "S" and role != "T":
+            return error(request, "the role is invalid", 403)
+        if email == None or email.strip() == "":
+            return error(request, "the email is empty", 403)
+        if last_name == None or last_name.strip() == "":
+            return error(request, "the surname is empty", 403)
+        if first_name == None or first_name.strip() == "":
+            return error(request, "the name is empty", 403)
+        
+        #passed checks
+        user,_ = User.objects.get_or_create(username=username)
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.profile.role = role
+        user.set_password(password)
+        return render(request, 'exam_network/welcome.html')
+    else:
+        return render(request, 'exam_network/signup.html')
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -15,16 +57,14 @@ def user_login(request):
     elif request.method == 'POST':
         username = request.POST.get('email')
         password = request.POST.get('password')
-
         user = authenticate(username=username, password=password)
-
         if user:
             if user.is_active:
                 login(request, user)
                 return redirect(reverse('exam_network:index'))
             return HttpResponse("Your Exam Network account is disabled.")
         print(f'Invalid login details: {username}')
-        return HttpResponse("Invalid login details supplied.")
+        return error(request, "the login details are incorrect", 403)
     else:
         return render(request, 'exam_network/login.html')
 
@@ -69,20 +109,6 @@ def show_exam(request, exam_name):
         context_dict['questions'] = None
     return render(request, 'exam_network/exam.html', context=context_dict)
 
-
-def error(request, message, error):
-    return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
-
-
-##Added by Roman. You can modify these views. I just used them for frontend development##
-def signup(request):
-    if request.user.is_authenticated:
-        return error(request, "you are already logged in", 403)
-    elif request.method == "POST":
-        print(request.POST)
-    else:
-        return render(request, 'exam_network/signup.html')
-
 def add_course(request):
     return render(request, 'exam_network/add_course.html')
 
@@ -103,4 +129,3 @@ def exam(request, slug):
 
 def help(request):
     return render(request, 'exam_network/help.html')
-##Added by Roman. You can modify these views. I just used them for frontend development##

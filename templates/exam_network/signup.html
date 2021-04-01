@@ -16,20 +16,20 @@
         </div>
         <div class="input_row">
             <span>Email</span>
-            <input name="email">
-        </div>
-        <div class="input_row">
-            <span>Password</span>
-            <input name="password">
-        </div>
-        <div class="input_row">
-            <span>Confirm Password</span>
-            <input name="confirm_password">
+            <input type="email" name="email">
         </div>
         <div class="input_row">
             <span>I am </span>
-            <label><input type="radio" name="role" value="student"> student</label>
-            <label style="padding-left: 20px;"><input type="radio" name="role" value="teacher"> teacher</label>
+            <label><input type="radio" name="role" value="S" checked="checked"> student</label>
+            <label style="padding-left: 20px;"><input type="radio" name="role" value="T"> teacher</label>
+        </div>
+        <div class="input_row">
+            <span>Password</span>
+            <input type="password" name="password">
+        </div>
+        <div class="input_row">
+            <span>Confirm Password</span>
+            <input type="password" name="confirm_password">
         </div>
     </form>
     <a href="{%url 'exam_network:index'%}"><button class="gray_button">Cancel</button></a>
