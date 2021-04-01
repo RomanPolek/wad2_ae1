@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from .models import Exam, Course, Question
 from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 def error(request, message, error):
     return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
@@ -45,8 +46,9 @@ def signup(request):
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
-        user.profile.role = role
         user.set_password(password)
+        user.profile.role = role
+        login(request, user)
         return render(request, 'exam_network/welcome.html')
     else:
         return render(request, 'exam_network/signup.html')
