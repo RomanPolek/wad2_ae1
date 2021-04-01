@@ -95,7 +95,7 @@ img {
     display: inline-block;
     margin: 0;
     padding: 0;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .input_row > span {

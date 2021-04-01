@@ -26,8 +26,13 @@
             <span>Confirm Password</span>
             <input name="confirm_password">
         </div>
+        <div class="input_row">
+            <span>I am </span>
+            <label><input type="radio" name="role" value="student"> student</label>
+            <label style="padding-left: 20px;"><input type="radio" name="role" value="teacher"> teacher</label>
+        </div>
     </form>
     <a href="{%url 'exam_network:index'%}"><button class="gray_button">Cancel</button></a>
-    <button type="submit" class="blue_button" style="margin-top: 30px;" form="signup_form">Sign Up</button>
+    <button type="submit" class="blue_button" style="margin-top: 10px;" form="signup_form">Sign Up</button>
 </div>
 {%endblock%}
