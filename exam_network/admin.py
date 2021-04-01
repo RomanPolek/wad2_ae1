@@ -38,7 +38,7 @@ class ProfileAdminForm(forms.ModelForm):
 
         if user.pk:
             # If changes were made we need to save them to the right field depending on the Role
-            if self.instance.role == 'S':
+            if self.instance.profile.role == 'S':
                 user.course_set.set(self.cleaned_data['course_set'])
             else:
                 user.taught.set(self.cleaned_data['course_set'])

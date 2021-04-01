@@ -10,8 +10,10 @@ def index(request):
 
 
 def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
+    if request.user.is_authenticated:
+        return error(request, "you are already logged in", 403)
+    elif request.method == 'POST':
+        username = request.POST.get('email')
         password = request.POST.get('password')
 
         user = authenticate(username=username, password=password)
@@ -31,10 +33,12 @@ def contact(request):
     return render(request, 'exam_network/contact.html')
 
 
-@login_required
 def user_logout(request):
-    logout(request)
-    return redirect(reverse('exam_network:index'))
+    if not request.user.is_authenticated:
+        return error(request, "you are not logged in", 403)
+    else:
+        logout(request)
+        return redirect(reverse('exam_network:index'))
 
 
 def show_exams(request, course_name):
@@ -66,13 +70,18 @@ def show_exam(request, exam_name):
     return render(request, 'exam_network/exam.html', context=context_dict)
 
 
-def handler404(request, exception):
-    return render(request, 'exam_network/handler404.html', status=404)
+def error(request, message, error):
+    return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
 
 
 ##Added by Roman. You can modify these views. I just used them for frontend development##
 def signup(request):
-    return render(request, 'exam_network/signup.html')
+    if request.user.is_authenticated:
+        return error(request, "you are already logged in", 403)
+    elif request.method == "POST":
+        print(request.POST)
+    else:
+        return render(request, 'exam_network/signup.html')
 
 def welcome_back(request):
     return render(request, 'exam_network/welcome_back.html')

@@ -1,0 +1,14 @@
+#error_wrapper {
+    text-align: center;
+    width: 400px;
+    margin: auto;
+    padding: 20px;
+}
+
+#error_wrapper span{
+    padding-right: 50px;
+}
+
+#error_wrapper h1{
+    margin-top: 0;
+}

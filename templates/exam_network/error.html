@@ -1,0 +1,13 @@
+{% extends "exam_network/base.html" %}
+{% block page_content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'error/error.css' %}">
+<div style="padding: 50px;">
+    <div id="error_wrapper" class="black_border">
+        <h1>Oops. Looks like {{message}}</h1>
+        <div>
+            <span>Error <b>{{error}}</b></span><a href="{%url 'exam_network:index'%}"><button class="blue_button">Home</button></a>
+        </div>
+    </div>
+</div>
+{% endblock %}

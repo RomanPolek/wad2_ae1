@@ -132,6 +132,10 @@ img {
     text-align: left;
     color: rgb(83, 83, 83);
 }
+
+a {
+    text-decoration: none;
+}
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {
@@ -203,14 +207,14 @@ footer {
     border-radius: 100px;
 }
 
-#header_login {
+#user_container {
     position: absolute;
     top: 0;
     right: 0;
     margin: 10px;
 }
 
-#header_signup button {
+#signup_button {
     border-style: solid;
     border-color: white;
     border-width: 1px;
@@ -220,4 +224,12 @@ footer {
 
 footer img {
     height: calc(100% - 60px) !important;
+}
+
+@media all and (max-width:900px){
+    #user_container *{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }    
 }
