@@ -17,7 +17,7 @@
     <body>
         <div id="header">
             <div id="loading_bar"></div>
-            <a href="{%url 'exam_network:index'%}"><img class="exam_network_logo" src="/media/exam_network_logo.svg" alt="exam network logo"/></a>
+            <a href="{%url 'exam_network:index'%}"><img class="exam_network_logo" src="/media/exam_network_logo.png" alt="exam network logo"/></a>
             <div id="user_container">
                 {%if not user.is_authenticated%}
                     <a href="{%url 'exam_network:signup'%}"><button class="blue_button">Sign up</button></a>
@@ -48,7 +48,7 @@
                 <a href="{%url 'exam_network:contact'%}"><button class="blue_button">Contact</button></a>
                 <a href="{%url 'exam_network:help'%}"><button class="blue_button">Help</button></a>
             </div>
-            <a href="{%url 'exam_network:index'%}"><img class="exam_network_logo" src="/media/exam_network_logo.svg" alt="exam network logo"/></a>
+            <a href="{%url 'exam_network:index'%}"><img class="exam_network_logo" src="/media/exam_network_logo.png" alt="exam network logo"/></a>
         </footer>
         <script async src="{% static 'global/global.js' %}"></script>
         <script>document.getElementById("loading_bar").style.display = "none"</script>
