@@ -12,44 +12,59 @@ def error(request, message, error):
 def index(request):
     return render(request, 'exam_network/index.html', {})
 
+def process_account_edit(request, return_url_name, create):
+    first_name = request.POST.get("first_name")
+    last_name = request.POST.get("last_name")
+    email = request.POST.get("email")
+    username = request.POST.get("email")
+    role = request.POST.get("role")
+    password = request.POST.get("password")
+    confirm_password = request.POST.get("confirm_password")
+
+    #checks
+    if password != confirm_password:
+        return error(request, "the passwords do not match", 403)
+    if password == None or password.strip() == "":
+        return error(request, "the password is empty", 403)
+    if role != "S" and role != "T":
+        return error(request, "the role is invalid", 403)
+    if role != "S" and role != "T":
+        return error(request, "the role is invalid", 403)
+    if email == None or email.strip() == "":
+        return error(request, "the email is empty", 403)
+    if last_name == None or last_name.strip() == "":
+        return error(request, "the surname is empty", 403)
+    if first_name == None or first_name.strip() == "":
+        return error(request, "the name is empty", 403)
+    
+    #passed checks
+    user = None
+    if create:
+        try:
+            User.objects.get(username=username) #check if this user exists
+            return error(request, "this email is already taken", 403)
+        except:
+            user = User.objects.create(username=username) #doesnt exist so create
+    else:
+        try:
+            user = User.objects.get(username=username) #check if this user exists
+        except:
+            return error(request, "this account does not exist", 403)
+    user.first_name = first_name
+    user.last_name = last_name
+    user.email = email
+    user.set_password(password)
+    user.profile.role = role
+    user.save()
+    login(request, user)
+    return redirect(reverse('exam_network:' + return_url_name))
+
+
 def signup(request):
     if request.user.is_authenticated:
         return error(request, "you are already logged in", 403)
     elif request.method == "POST":
-        first_name = request.POST.get("first_name")
-        last_name = request.POST.get("last_name")
-        email = request.POST.get("email")
-        username = request.POST.get("email")
-        role = request.POST.get("role")
-        password = request.POST.get("password")
-        confirm_password = request.POST.get("confirm_password")
-
-        #checks
-        if password != confirm_password:
-            return error(request, "the passwords do not match", 403)
-        if password == None or password.strip() == "":
-            return error(request, "the password is empty", 403)
-        if role != "S" and role != "T":
-            return error(request, "the role is invalid", 403)
-        if role != "S" and role != "T":
-            return error(request, "the role is invalid", 403)
-        if email == None or email.strip() == "":
-            return error(request, "the email is empty", 403)
-        if last_name == None or last_name.strip() == "":
-            return error(request, "the surname is empty", 403)
-        if first_name == None or first_name.strip() == "":
-            return error(request, "the name is empty", 403)
-        
-        #passed checks
-        user,_ = User.objects.get_or_create(username=username)
-        user.first_name = first_name
-        user.last_name = last_name
-        user.email = email
-        user.set_password(password)
-        user.profile.role = role
-        user.save()
-        login(request, user)
-        return render(request, 'exam_network/welcome.html')
+        return process_account_edit(request, 'welcome')
     else:
         return render(request, 'exam_network/signup.html')
 
@@ -71,7 +86,13 @@ def user_login(request):
         return render(request, 'exam_network/login.html')
 
 def account(request):
-    return render(request, 'exam_network/account.html')
+    if not request.user.is_authenticated:
+        return error(request, "you are not logged in", 403)
+    elif request.method == 'POST':
+        return process_account_edit(request, 'index')
+    else:
+        return render(request, 'exam_network/account.html')
+    
 
 def contact(request):
     return render(request, 'exam_network/contact.html')
