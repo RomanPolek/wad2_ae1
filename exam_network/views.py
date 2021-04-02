@@ -70,6 +70,8 @@ def user_login(request):
     else:
         return render(request, 'exam_network/login.html')
 
+def account(request):
+    return render(request, 'exam_network/account.html')
 
 def contact(request):
     return render(request, 'exam_network/contact.html')
