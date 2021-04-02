@@ -64,7 +64,7 @@ def signup(request):
     if request.user.is_authenticated:
         return error(request, "you are already logged in", 403)
     elif request.method == "POST":
-        return process_account_edit(request, 'welcome')
+        return process_account_edit(request, 'welcome', True)
     else:
         return render(request, 'exam_network/signup.html')
 
@@ -89,7 +89,7 @@ def account(request):
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
     elif request.method == 'POST':
-        return process_account_edit(request, 'index')
+        return process_account_edit(request, 'index', False)
     else:
         return render(request, 'exam_network/account.html')
     
