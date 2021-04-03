@@ -42,7 +42,7 @@ def process_account_edit(request, return_url_name, create):
     user = None
     if create:
         try:
-            User.objects.get(username=username) #check if this user exists
+            User.objects.get(username__eq=username) #check if this user exists
             return error(request, "this email is already taken", 403)
         except:
             user = User.objects.create(username=username) #doesnt exist so create
@@ -172,7 +172,7 @@ def add_course(request):
 
         #create new course if successful and if does not exist
         try:
-            Course.objects.get(name=name) #check if already exists
+            Course.objects.get(name__eq=name) #check if already exists
             return error(request, "a course with this name already exists", 403)
         except:
             course = Course.objects.create(name=name, description=details, teacher=request.user)
@@ -182,10 +182,10 @@ def add_course(request):
         return render(request, 'exam_network/add_course.html')
 
 def add_students(request):
-    return render(request, 'exam_network/add_students.html')
+    return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
 
 def add_exam(request):
-    return render(request, 'exam_network/add_exam.html')
+    return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
 
 def about_us(request):
     return render(request, 'exam_network/about_us.html')
@@ -212,7 +212,7 @@ def exams(request, id=None):
     except:
         pass
     return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course})
-    
+
 def help(request):
     return render(request, 'exam_network/help.html')
 
