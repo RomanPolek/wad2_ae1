@@ -19,7 +19,7 @@ class ProfileAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileAdminForm, self).__init__(*args, **kwargs)
 
-        if self.instance and self.instance.pk:
+        if self.instance and self.instance.id:
             # Depending on the Role, the Course field should be either Courses taken or taught
             # Set the initial field value to either 'course_set' for Students or 'taught' for Teachers
             if self.instance.profile.role == 'Student':
@@ -36,7 +36,7 @@ class ProfileAdminForm(forms.ModelForm):
         if commit:
             user.save()
 
-        if user.pk:
+        if user.id:
             # If changes were made we need to save them to the right field depending on the Role
             if self.instance.profile.role == 'S':
                 user.course_set.set(self.cleaned_data['course_set'])
@@ -77,7 +77,7 @@ class CourseAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CourseAdminForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
+        if self.instance and self.instance.id:
             self.fields['students'].initial = self.instance.students.all()
 
     def save(self, commit=True):
@@ -86,7 +86,7 @@ class CourseAdminForm(forms.ModelForm):
         if commit:
             course.save()
 
-        if course.pk:
+        if course.id:
             course.students.set(self.cleaned_data['students'])
             self.save_m2m()
 

@@ -5,7 +5,7 @@ from django.dispatch import receiver
 import uuid
 
 class Profile(models.Model):
-    pk = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     class Role(models.TextChoices):
@@ -25,7 +25,7 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
 
 # Course taken by many Students and taught by one (more than one?) Teacher
 class Course(models.Model):
-    pk = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
 
@@ -39,7 +39,7 @@ class Course(models.Model):
 
 # Question to be asked as part of an exam
 class Question(models.Model):
-    pk = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     # the actual text/content of the question
     content = models.CharField(max_length=250)
     # TODO: probably there'll be some checks needed but hey, variable numbers of choices are coool
@@ -58,7 +58,7 @@ class Question(models.Model):
 # Exam taken by a student
 # Questions are added to it using a many-to-many field
 class Exam(models.Model):
-    pk = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     title = models.CharField(max_length=50)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     date_available = models.DateTimeField()
@@ -71,7 +71,7 @@ class Exam(models.Model):
 
 # Answer given by a student while taking the exam, used for marking
 class Answer(models.Model):
-    pk = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     # question the answer is attached to
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     # id of the answer given by the student, to be compared with Question's answer field
@@ -87,7 +87,7 @@ class Answer(models.Model):
 # Score can be calculated by accessing answers
 # Used by Teachers for marking
 class Submission(models.Model):
-    pk = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField()
