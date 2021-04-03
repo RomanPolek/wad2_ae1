@@ -147,7 +147,31 @@ def show_submissions(request, course_name):
     return render(request, 'exam_network/results.html', context=context_dict)
 
 def add_course(request):
-    return render(request, 'exam_network/add_course.html')
+    if not request.user.is_authenticated:
+        return error(request, "you are already not logged in", 403)
+    elif request.user.profile.role != "T":
+        return error(request, "you do not have permission do perform this operation", 403)
+    elif request.method == 'POST':
+        #get data
+        name = request.POST.get('course_name')
+        details = request.POST.get('details')
+        
+        #perform checks
+        if name == None or name.strip() == "":
+            return error(request, "the course name is not filled in", 403)
+        if details == None or details.strip() == "":
+            return error(request, "the details are not filled in", 403)
+
+        #create new course if successful and if does not exist
+        try:
+            Course.objects.get(name=name) #check if already exists
+            return error(request, "a course with this name already exists", 403)
+        except:
+            course = Course.objects.create(name=name, description=details, teacher=request.user)
+            course.save()
+        return redirect(reverse('exam_network:index'))
+    else:
+        return render(request, 'exam_network/add_course.html')
 
 def add_students(request):
     return render(request, 'exam_network/add_students.html')
