@@ -148,7 +148,7 @@ def show_submissions(request, course_name):
 
 def add_course(request):
     if not request.user.is_authenticated:
-        return error(request, "you are already not logged in", 403)
+        return error(request, "you are not logged in", 403)
     elif request.user.profile.role != "T":
         return error(request, "you do not have permission do perform this operation", 403)
     elif request.method == 'POST':
@@ -182,12 +182,29 @@ def about_us(request):
 def exam_result(request):
     return render(request, 'exam_network/exam_result.html')
 
-def exams(request):
-    return render(request, 'exam_network/exams.html')
+def exams(request, id=None):
+    #get the available exams
+    courses = None
+    exams = Exam.objects.all()
 
-def exam(request, slug):
-    return render(request, 'exam_network/exam.html')
+    if not request.user.is_authenticated:
+        return error(request, "you are not logged in", 403)
+    elif len(Exam.objects.filter(id=id)) != 0:
+        #this id is an exam
+        return render(request, 'exam_network/exam.html', {"exam":Exam.objects.filter(id=id)})
+    elif request.user.profile.role == "S":
+        courses = Course.objects.filter(students__in=[request.user])
+    elif request.user.profile.role == "T":
+        courses = Course.objects.filter(teacher=request.user)
+    else:
+        return error(request, "something went wrong", 403)
 
+    #if the id is course filter exams based on this course
+    try:
+        exams = exams.filter(course=Course.objects.get(id=id))
+    except:
+        pass
+    return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams})
 def help(request):
     return render(request, 'exam_network/help.html')
 
