@@ -186,6 +186,7 @@ def exams(request, id=None):
     #get the available exams
     courses = None
     exams = Exam.objects.all()
+    current_course = False
 
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
@@ -201,10 +202,11 @@ def exams(request, id=None):
 
     #if the id is course filter exams based on this course
     try:
-        exams = exams.filter(course=Course.objects.get(id=id))
+        current_course = Course.objects.get(id=id)
+        exams = exams.filter(course=current_course)
     except:
         pass
-    return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams})
+    return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course})
 def help(request):
     return render(request, 'exam_network/help.html')
 

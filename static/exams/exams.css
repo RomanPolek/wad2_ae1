@@ -5,9 +5,9 @@
     width: 350px;
 }
 
-#course_navigator > *{
+#course_navigator > a > * {
     display: block;
-    margin: 15px;
+    margin: 15px 0px 15px 0px;
     width: 100%;
     text-align: left;
 }
