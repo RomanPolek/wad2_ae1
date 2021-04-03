@@ -7,11 +7,15 @@
     <form class="two_split_content" method="POST" style="margin-top: 40px;">
         {%csrf_token%}
         <div class="input_row">
-            <span>Course Name</span>
-            <input name="course_name">
+            <span>Select Course</span>
+            <select name="course_name">
+                {%for option in courses%}
+                    <option value="{{option.id}}">{{option.name}}</option>
+                {%endfor%}
+            </select>
         </div>
         <div class="input_row">
-            <span>Students ID's<br>(comma separated)</span>
+            <span>Student emails<br>(comma separated)</span>
             <textarea name="details" cols="30" rows="6" style="resize: none;"></textarea>
         </div>
         <button type="submit" class="blue_button" style="margin-top: 30px; float: right;">Add</button>
