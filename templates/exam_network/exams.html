@@ -29,7 +29,7 @@
     </div>
     <div id="course_explorer">
         {%if exams|length == 0%}
-        <p class="text" style="text-align: center;">Looks like there are no exams assigned for you {%if current_course%}in course {{current_course.name}}{%endif%}</p>
+        <p class="text" style="text-align: center;">Looks like there are no exams in {%if current_course%}course {{current_course.name}}{%else%}your courses{%endif%}</p>
         {%endif%}
         {%for exam in exams%}
             <div class="black_border">
