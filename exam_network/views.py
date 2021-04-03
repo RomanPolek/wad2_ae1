@@ -6,6 +6,7 @@ from django.urls import reverse
 from .models import Exam, Course, Question
 from django.contrib.auth.models import User
 from django.db.models import Q
+import datetime
 
 def error(request, message, error):
     return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
@@ -68,6 +69,10 @@ def get_courses(request):
         return Course.objects.filter(teacher=request.user)
     else:
         return Course.objects.none()
+
+def get_exams(courses):
+    now = datetime.datetime.now()
+    return Exam.objects.filter(course__in=courses, date_available__lte=now, deadline__gte=now)
 
 def signup(request):
     if request.user.is_authenticated:
@@ -196,15 +201,15 @@ def exam_result(request):
 def exams(request, id=None):
     #get the available exams
     courses = get_courses(request)
-    exams = Exam.objects.all()
+    exams = get_exams(courses)
     current_course = False
 
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
-    elif len(Exam.objects.filter(id=id)) != 0:
+    elif len(exams.filter(id=id)) != 0:
         #this id is an exam
-        return render(request, 'exam_network/exam.html', {"exam":Exam.objects.filter(id=id)})
-
+        return render(request, 'exam_network/exam.html', {"exam":exams.filter(id=id)})
+    
     #if the id is course filter exams based on this course
     try:
         current_course = courses.get(id=id)
