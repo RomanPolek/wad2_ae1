@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.urls import reverse
 from .models import Exam, Course, Question
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 def error(request, message, error):
     return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
@@ -60,6 +61,13 @@ def process_account_edit(request, return_url_name, create):
     login(request, user)
     return redirect(reverse('exam_network:' + return_url_name))
 
+def get_courses(request):
+    if request.user.profile.role == "S":
+        return Course.objects.filter(students__in=[request.user])
+    elif request.user.profile.role == "T":
+        return Course.objects.filter(teacher=request.user)
+    else:
+        return Course.objects.none()
 
 def signup(request):
     if request.user.is_authenticated:
@@ -176,6 +184,9 @@ def add_course(request):
 def add_students(request):
     return render(request, 'exam_network/add_students.html')
 
+def add_exam(request):
+    return render(request, 'exam_network/add_exam.html')
+
 def about_us(request):
     return render(request, 'exam_network/about_us.html')
 
@@ -184,7 +195,7 @@ def exam_result(request):
 
 def exams(request, id=None):
     #get the available exams
-    courses = None
+    courses = get_courses(request)
     exams = Exam.objects.all()
     current_course = False
 
@@ -193,20 +204,15 @@ def exams(request, id=None):
     elif len(Exam.objects.filter(id=id)) != 0:
         #this id is an exam
         return render(request, 'exam_network/exam.html', {"exam":Exam.objects.filter(id=id)})
-    elif request.user.profile.role == "S":
-        courses = Course.objects.filter(students__in=[request.user])
-    elif request.user.profile.role == "T":
-        courses = Course.objects.filter(teacher=request.user)
-    else:
-        return error(request, "something went wrong", 403)
 
     #if the id is course filter exams based on this course
     try:
-        current_course = Course.objects.get(id=id)
+        current_course = courses.get(id=id)
         exams = exams.filter(course=current_course)
     except:
         pass
     return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course})
+    
 def help(request):
     return render(request, 'exam_network/help.html')
 
