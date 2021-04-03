@@ -135,6 +135,17 @@ def show_exam(request, exam_name):
         context_dict['questions'] = None
     return render(request, 'exam_network/exam.html', context=context_dict)
 
+def show_submissions(request, course_name):
+    context_dict = {}
+    try:
+        course = Course.objects.get(name=course_name)
+        exams = Exam.objects.filter(course=course)
+        submissions = Submission.objects.filter(student=request.user).filter(exam=exams)
+        context_dict['submissions'] = submissions
+    except Course.DoesNotExist:
+        context_dict['submissions'] = None
+    return render(request, 'exam_network/results.html', context=context_dict)
+
 def add_course(request):
     return render(request, 'exam_network/add_course.html')
 
