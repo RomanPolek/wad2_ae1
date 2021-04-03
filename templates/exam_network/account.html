@@ -8,11 +8,11 @@
         {%csrf_token%}
         <div class="input_row">
             <span>Name</span>
-            <input name="first_name" value="{{user.first_name}}">
+            <input name="first_name" value="{{user.first_name}}"required>
         </div>
         <div class="input_row">
             <span>Surname</span>
-            <input name="last_name" value="{{user.last_name}}">
+            <input name="last_name" value="{{user.last_name}}" required>
         </div>
         <div class="input_row">
             <span>Email</span>

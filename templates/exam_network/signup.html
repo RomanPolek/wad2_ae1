@@ -8,15 +8,15 @@
         {%csrf_token%}
         <div class="input_row">
             <span>Name</span>
-            <input name="first_name">
+            <input name="first_name" required>
         </div>
         <div class="input_row">
             <span>Surname</span>
-            <input name="last_name">
+            <input name="last_name" required>
         </div>
         <div class="input_row">
             <span>Email</span>
-            <input type="email" name="email">
+            <input type="email" name="email" required>
         </div>
         <div class="input_row">
             <span>I am </span>
@@ -25,11 +25,11 @@
         </div>
         <div class="input_row">
             <span>Password</span>
-            <input type="password" name="password">
+            <input type="password" name="password" required>
         </div>
         <div class="input_row">
             <span>Confirm Password</span>
-            <input type="password" name="confirm_password">
+            <input type="password" name="confirm_password" required>
         </div>
     </form>
     <a href="{%url 'exam_network:index'%}"><button class="gray_button">Cancel</button></a>
