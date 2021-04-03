@@ -34,6 +34,7 @@
                 {%if user.profile.role == "T"%}
                     <a href="{%url 'exam_network:add_course'%}"><button class="blue_button">Add Course</button></a>
                     <a href="{%url 'exam_network:add_students'%}"><button class="blue_button">Add Students</button></a>
+                    <a href="{%url 'exam_network:add_exam'%}"><button class="blue_button">Add Exam</button></a>
                 {%endif%}
             {%else%}
                 <a href="{%url 'exam_network:signup'%}"><button id="signup_button" class="blue_button">Sign up for Exam Network</button></a>
