@@ -53,7 +53,8 @@ def process_account_edit(request, return_url_name, create):
     user.first_name = first_name
     user.last_name = last_name
     user.email = email
-    user.set_password(password)
+    if password != "***********":
+        user.set_password(password)
     user.profile.role = role
     user.save()
     login(request, user)

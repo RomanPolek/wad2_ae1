@@ -8,11 +8,11 @@
         {%csrf_token%}
         <div class="input_row">
             <span>Email</span>
-            <input type="email" name="email">
+            <input type="email" name="email" required>
         </div>
         <div class="input_row">
             <span>Password</span>
-            <input type="password" name="password">
+            <input type="password" name="password" required>
         </div>
     </form>
     <a href="{%url 'exam_network:index'%}"><button class="gray_button">Cancel</button></a>
