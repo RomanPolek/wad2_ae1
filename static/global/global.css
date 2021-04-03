@@ -136,6 +136,12 @@ img {
 a {
     text-decoration: none;
 }
+
+.selected {
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+}
 /*BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS//BLUEPRINTS*/
 
 body {

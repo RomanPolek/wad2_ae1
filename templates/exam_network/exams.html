@@ -5,7 +5,7 @@
 <div id="exams_wrapper">
     <div id="course_navigator">
         {%for course in courses%}
-            <button class="blue_button">{{course.name}}</button>
+            <a href="{%url 'exam_network:exams' course.id%}"><button class="blue_button {%if current_course == course%}selected{%endif%}">{{course.name}}</button></a>
         {%endfor%}
         <div id="statistics" class="black_border">
             <h1>Statistics</h1>
@@ -28,32 +28,16 @@
         </div>
     </div>
     <div id="course_explorer">
-
-        <div class="black_border">
-            <h1>Course Name Exam 1</h1>
-            <p>Your Score: </p><span>97%</span><br>
-            <p>Your Grade: </p><span>A</span>
-        </div>
-        <div class="black_border">
-            <h1>Course Name Exam 1</h1>
-            <p>Your Score: </p><span>97%</span><br>
-            <p>Your Grade: </p><span>A</span>
-        </div>
-        <div class="black_border">
-            <h1>Course Name Exam 1</h1>
-            <p>Your Score: </p><span>97%</span><br>
-            <p>Your Grade: </p><span>A</span>
-        </div>
-        <div class="black_border">
-            <h1>Course Name Exam 1</h1>
-            <p>Your Score: </p><span>97%</span><br>
-            <p>Your Grade: </p><span>A</span>
-        </div>
-        <div class="black_border">
-            <h1>Course Name Exam 1</h1>
-            <p>Your Score: </p><span>97%</span><br>
-            <p>Your Grade: </p><span>A</span>
-        </div>
+        {%if exams|length == 0%}
+        <p class="text" style="text-align: center;">Looks like there are no exams assigned for you {%if current_course%}in course {{current_course.name}}{%endif%}</p>
+        {%endif%}
+        {%for exam in exams%}
+            <div class="black_border">
+                <h1>exam.title</h1>
+                <p>Your Score: </p><span>97%</span><br>
+                <p>Your Grade: </p><span>A</span>
+            </div>
+        {%endfor%}
     </div>
 </div>
 {% endblock %}
