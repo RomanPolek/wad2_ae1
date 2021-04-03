@@ -17,5 +17,5 @@ urlpatterns = [
     path('help/', views.help, name='help'),
     path('account/', views.account, name='account'),
     path('exams/', views.exams, name='exams'),
-    path('exams/<slug:slug>', views.exam, name='exams'),
+    path('exams/<id>', views.exams, name='exams'),
 ]
