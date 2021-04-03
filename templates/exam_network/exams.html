@@ -4,10 +4,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'exams/exams.css' %}">
 <div id="exams_wrapper">
     <div id="course_navigator">
-        <button class="blue_button">Course Name</button>
-        <button class="blue_button">Course Name</button>
-        <button class="blue_button">Course Name</button>
-        <button class="blue_button">Course Name</button>
+        {%for course in courses%}
+            <button class="blue_button">{{course.name}}</button>
+        {%endfor%}
         <div id="statistics" class="black_border">
             <h1>Statistics</h1>
             <div>
@@ -29,6 +28,7 @@
         </div>
     </div>
     <div id="course_explorer">
+
         <div class="black_border">
             <h1>Course Name Exam 1</h1>
             <p>Your Score: </p><span>97%</span><br>
