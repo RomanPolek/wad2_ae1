@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Exam, Course, Question
+from .models import Exam, Course, Question, Profile, Submission
 from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
@@ -187,33 +187,52 @@ def add_students(request):
 def add_exam(request):
     return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
 
+
+@login_required
+def exam_result(request, course_slug_name, exam_slug_name):
+    context_dict = {}
+    try:
+        courses = Course.objects.filter(authorised=request.user)
+        context_dict['courses'] = courses
+        course = courses.objects.get(slug=course_slug_name)
+        context_dict['course'] = course
+        exam = Exam.objects.get(course=course, slug=exam_slug_name)
+        submission = Submission.objects.get(exam=exam, student=request.user)
+        context_dict['submission'] = submission
+    except Course.DoesNotExist:
+        context_dict['course'] = None
+    except Submission.DoesNotExist:
+        context_dict['submission'] = None
+    return render(request, 'exam_network/exam_result.html')
+
+
+@login_required
+def exams(request, course_slug_name):
+    context_dict = {}
+    try:
+        courses = Course.objects.filter(authorised=request.user)
+        context_dict['courses'] = courses
+        course = courses.objects.get(slug=course_slug_name)
+        context_dict['course'] = course
+        now = datetime.datetime.now()
+        exams = Exam.objects.filter(
+            course=course,
+            date_available__lte=now,
+            deadline__gte=now)
+        context_dict['exams'] = exams
+    except Course.DoesNotExist:
+        context_dict['course'] = None
+        context_dict['exams'] = None
+    return render(request, 'exam_network/exams.html', context_dict)
+
+
 def about_us(request):
     return render(request, 'exam_network/about_us.html')
 
-def exam_result(request):
-    return render(request, 'exam_network/exam_result.html')
-
-@login_required
-def exams(request, id=None):
-    #get the available exams
-    courses = get_courses(request)
-    exams = get_exams(courses)
-    current_course = False
-
-    if len(Exam.objects.filter(id=id)) != 0:
-        #this id is an exam
-        return render(request, 'exam_network/exam.html', {"exam":exams.filter(id=id)})
-
-    #if the id is course filter exams based on this course
-    try:
-        current_course = courses.get(id=id)
-        exams = exams.filter(course=current_course)
-    except:
-        pass
-    return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course})
 
 def help(request):
     return render(request, 'exam_network/help.html')
+
 
 def welcome(request):
     return render(request, 'exam_network/welcome.html')
