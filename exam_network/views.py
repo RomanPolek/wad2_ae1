@@ -237,6 +237,27 @@ def add_exam(request):
 
 
 @login_required
+def add_question(request, exam_slug_name):
+    if(request.user.profile.role != 'T'):
+        return error(request, "Unauthorised Access.", 401)
+    context_dict = {}
+    question_form = None
+    exam = Exam.objects.get(slug=exam_slug_name)
+    if request.method == 'POST':
+        question_form = QuestionForm(request.POST)
+        if question_form.is_valid():
+            question = question_form.save()
+            question.exam = exam
+            question.save()
+        if 'submit_exam' in request.POST:
+            return redirect(reverse('exam_network:index'))
+    context_dict['questions'] = Question.objects.filter(exam=exam)
+    question_form = QuestionForm()
+    context_dict['question_form'] = question_form
+    return render(request, 'exam_network/add_question.html')
+
+
+@login_required
 def exam_result(request, course_slug_name, exam_slug_name):
     context_dict = {}
     try:
