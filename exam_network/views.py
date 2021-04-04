@@ -201,10 +201,15 @@ def add_exam(request):
     context_dict = {}
     is_completed = False
     exam_form = None
+    courses = Course.objects.filter(authorised=request.user)
+    context_dict['courses'] = courses
     if request.method == 'POST':
         exam_form = ExamForm(request.POST)
         if exam_form.is_valid():
             exam = exam_form.save()
+            course_name = request.POST.get("course_name")
+            course = Course.objects.get(name=course_name)
+            exam.course = course
             exam.save()
             is_completed = True
     else:
