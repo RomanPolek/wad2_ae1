@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from django.urls import reverse
 from .models import Exam, Course, Question
 from django.contrib.auth.models import User
+from django.db.models import Q
+import datetime
 
 def error(request, message, error):
     return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
@@ -41,7 +43,7 @@ def process_account_edit(request, return_url_name, create):
     user = None
     if create:
         try:
-            User.objects.get(username=username) #check if this user exists
+            User.objects.get(username__eq=username) #check if this user exists
             return error(request, "this email is already taken", 403)
         except:
             user = User.objects.create(username=username) #doesnt exist so create
@@ -60,6 +62,17 @@ def process_account_edit(request, return_url_name, create):
     login(request, user)
     return redirect(reverse('exam_network:' + return_url_name))
 
+def get_courses(request):
+    if request.user.profile.role == "S":
+        return Course.objects.filter(students__in=[request.user])
+    elif request.user.profile.role == "T":
+        return Course.objects.filter(teacher=request.user)
+    else:
+        return Course.objects.none()
+
+def get_exams(courses):
+    now = datetime.datetime.now()
+    return Exam.objects.filter(course__in=courses, date_available__lte=now, deadline__gte=now)
 
 def signup(request):
     if request.user.is_authenticated:
@@ -159,7 +172,7 @@ def add_course(request):
 
         #create new course if successful and if does not exist
         try:
-            Course.objects.get(name=name) #check if already exists
+            Course.objects.get(name__eq=name) #check if already exists
             return error(request, "a course with this name already exists", 403)
         except:
             course = Course.objects.create(name=name, description=details, teacher=request.user)
@@ -169,7 +182,10 @@ def add_course(request):
         return render(request, 'exam_network/add_course.html')
 
 def add_students(request):
-    return render(request, 'exam_network/add_students.html')
+    return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
+
+def add_exam(request):
+    return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
 
 def about_us(request):
     return render(request, 'exam_network/about_us.html')
@@ -180,23 +196,17 @@ def exam_result(request):
 @login_required
 def exams(request, id=None):
     #get the available exams
-    courses = None
-    exams = Exam.objects.all()
+    courses = get_courses(request)
+    exams = get_exams(courses)
     current_course = False
 
     if len(Exam.objects.filter(id=id)) != 0:
         #this id is an exam
-        return render(request, 'exam_network/exam.html', {"exam":Exam.objects.filter(id=id)})
-    elif request.user.profile.role == "S":
-        courses = Course.objects.filter(students__in=[request.user])
-    elif request.user.profile.role == "T":
-        courses = Course.objects.filter(teacher=request.user)
-    else:
-        return error(request, "something went wrong", 403)
+        return render(request, 'exam_network/exam.html', {"exam":exams.filter(id=id)})
 
     #if the id is course filter exams based on this course
     try:
-        current_course = Course.objects.get(id=id)
+        current_course = courses.get(id=id)
         exams = exams.filter(course=current_course)
     except:
         pass

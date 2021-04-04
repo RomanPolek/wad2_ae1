@@ -103,7 +103,7 @@ img {
     font-weight: 500;
 }
 
-.input_row > input {
+.input_row > input, .input_row > select {
     width: 60%;
 }
 
