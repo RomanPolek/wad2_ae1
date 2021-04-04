@@ -6,6 +6,7 @@ from django.urls import reverse
 from .models import Exam, Course, Question, Submission
 from .forms import UserForm, ProfileForm, ExamForm, QuestionForm, CourseForm
 from django.contrib.auth.models import User
+from django.forms import formset_factory
 import datetime
 
 def error(request, message, error):
@@ -152,7 +153,7 @@ def show_exam(request, exam_name):
     return render(request, 'exam_network/exam.html', context=context_dict)
 
 
-def show_submissions(request, course__name):
+def show_submissions(request, course_name):
     context_dict = {}
     try:
         course = Course.objects.get(name=course_name)
@@ -209,41 +210,29 @@ def add_exam(request):
     exam_form = None
     courses = Course.objects.filter(authorised=request.user)
     context_dict['courses'] = courses
+    QuestionFormSet = formset_factory(QuestionForm)
     if request.method == 'POST':
         exam_form = ExamForm(request.POST)
+        question_formset = QuestionFormSet(request.POST)
         if exam_form.is_valid():
             exam = exam_form.save()
             course_name = request.POST.get("course_name")
             course = Course.objects.get(name=course_name)
             exam.course = course
             exam.save()
+            for question_form in question_formset:
+                if question_formset.is_valid():
+                    question = question_form.save(commit=False)
+                    question.exam = exam
+                    question.save()
             is_completed = True
     else:
         exam_form = ExamForm()
+        question_formset = QuestionFormSet()
+    context_dict['question_form'] = question_formset
     context_dict['completed'] = is_completed
     context_dict['exam_form'] = exam_form
     return render(request, 'exam_network/add_exam.html', context_dict)
-
-
-@login_required
-def add_question(request, exam_slug_name):
-    if(request.user.profile.role != 'T'):
-        return error(request, "Unauthorised Access.", 401)
-    context_dict = {}
-    question_form = None
-    exam = Exam.objects.get(slug=exam_slug_name)
-    if request.method == 'POST':
-        question_form = QuestionForm(request.POST)
-        if question_form.is_valid():
-            question = question_form.save()
-            question.exam = exam
-            question.save()
-        if 'submit_exam' in request.POST:
-            return redirect(reverse('exam_network:index'))
-    context_dict['questions'] = Question.objects.filter(exam=exam)
-    question_form = QuestionForm()
-    context_dict['question_form'] = question_form
-    return render(request, 'exam_network/add_question.html')
 
 
 @login_required
