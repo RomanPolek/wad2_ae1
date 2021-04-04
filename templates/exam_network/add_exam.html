@@ -1,6 +1,9 @@
 {% extends "exam_network/two_split.html" %}
 {%block two_split_image_source%}/media/new_course_img1_w7.svg{%endblock%}
 {%block two_split_content%}
+{%load static%}
+<link rel="stylesheet" type="text/css" href="{% static 'add_exam/add_exam.css' %}">
+<script src="{% static 'add_exam/add_exam.js' %}" type="text/javascript"></script>
 <div id="signup_content_wrapper">
     <h1 class="big_title">Add exam</h1>
     <h3 class="medium_title">Please enter the details</h3>
@@ -8,7 +11,7 @@
         {%csrf_token%}
         <div class="input_row">
             <span>Select Course</span>
-            <select name="course_name">
+            <select name="course_id">
                 {%for option in courses%}
                     <option value="{{option.id}}">{{option.name}}</option>
                 {%endfor%}
@@ -16,16 +19,28 @@
         </div>
         <div class="input_row">
             <span>Title</span>
-            <input name="title">
+            <input name="title" required>
         </div>
         <div class="input_row">
             <span>Date Available</span>
-            <input type="datetime-local" name="date_available">
+            <input type="datetime-local" name="date_available" required>
         </div>
         <div class="input_row">
             <span>Deadline</span>
-            <input type="datetime-local" name="deadline">
+            <input type="datetime-local" name="deadline" required>
         </div>
+
+        <hr>
+        <div>
+            <div class="input_row">
+                <span>Questions</span>
+            </div>
+            <div id="question_container"></div>
+            <div style="text-align: right;">
+                <button type="button" class="blue_button round_button" onclick="exam_add_question()">+</button>
+            </div>
+        </div>
+        <hr>
         <button type="submit" class="blue_button" style="margin-top: 30px; float: right;">Add</button>
     </form>
     <button class="gray_button" style="margin-top: 30px; float: right;" onclick="window.history.back();">Cancel</button>
