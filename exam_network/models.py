@@ -17,20 +17,19 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
 
+
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
 
+
 # Course taken by many Students and taught by one (more than one?) Teacher
 class Course(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=50)
-
-    teacher = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='taught', null=True, blank=True)
-    students = models.ManyToManyField(User)
+    authorised = models.ManyToManyField(User)
 
     def __str__(self):
         return f"{self.name}"
