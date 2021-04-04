@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from .models import Exam, Course, Question, Profile, Submission
+from .forms import UserForm, ProfileForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
@@ -62,25 +63,35 @@ def process_account_edit(request, return_url_name, create):
     login(request, user)
     return redirect(reverse('exam_network:' + return_url_name))
 
-def get_courses(request):
-    if request.user.profile.role == "S":
-        return Course.objects.filter(students__in=[request.user])
-    elif request.user.profile.role == "T":
-        return Course.objects.filter(teacher=request.user)
-    else:
-        return Course.objects.none()
-
-def get_exams(courses):
-    now = datetime.datetime.now()
-    return Exam.objects.filter(course__in=courses, date_available__lte=now, deadline__gte=now)
 
 def signup(request):
+    context_dict = {'user_form_errors': None, 'profile_form_errors': None}
+    is_registered = False
     if request.user.is_authenticated:
         return error(request, "you are already logged in", 403)
     elif request.method == "POST":
-        return process_account_edit(request, 'welcome', True)
+        user_form = UserForm(request.POST)
+        profile_form = ProfileForm(request.POST)
+        if (user_form.is_valid() and profile_form.is_valid()):
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            is_registered = True
+            login(request, user)
+        else:
+            context_dict['user_form_errors'] = user_form.errors
+            context_dict['profile_form_errors'] = profile_form.errors
     else:
-        return render(request, 'exam_network/signup.html')
+        user_form = UserForm()
+        profile_form = ProfileForm()
+    context_dict["user_form"] = user_form
+    context_dict["profile_form"] = profile_form
+    context_dict['registered'] = is_registered
+    return render(request, 'exam_network/signup.html', context_dict)
+
 
 def user_login(request):
     if request.user.is_authenticated:
@@ -99,6 +110,7 @@ def user_login(request):
     else:
         return render(request, 'exam_network/login.html')
 
+
 @login_required
 def account(request):
     if request.method == 'POST':
@@ -106,8 +118,6 @@ def account(request):
     else:
         return render(request, 'exam_network/account.html')
 
-def contact(request):
-    return render(request, 'exam_network/contact.html')
 
 @login_required
 def user_logout(request):
@@ -184,8 +194,15 @@ def add_course(request):
 def add_students(request):
     return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
 
+
+@login_required
 def add_exam(request):
-    return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
+    if(request.user.profile.role != 'T'):
+        return error(request, "Unauthorised Access.", 401)
+    context_dict = {}
+    if request.method == 'POST':
+        # TODO: Exam form
+    return render(request, 'exam_network/add_exam.html', context_dict)
 
 
 @login_required
@@ -224,6 +241,10 @@ def exams(request, course_slug_name):
         context_dict['course'] = None
         context_dict['exams'] = None
     return render(request, 'exam_network/exams.html', context_dict)
+
+
+def contact(request):
+    return render(request, 'exam_network/contact.html')
 
 
 def about_us(request):
