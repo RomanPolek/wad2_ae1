@@ -67,6 +67,26 @@ class ProfileForm(forms.ModelForm):
         return role
 
 
+class CourseForm(forms.ModelForm):
+    name = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "", "placeholder": "Enter Course Name."}))
+    description = forms.Textarea(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "", "placeholder": "Enter Course Description."}))
+
+    class Meta:
+        model = Course
+        fields = ('name', 'description')
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if Course.objects.filter(name=name).count() != 0:
+            raise forms.ValidationError(
+                ("Course already exists."),
+                code='course_exists',
+            )
+        return name
+
+
 class ExamForm(forms.ModelForm):
     title = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
         attrs={"class": "", "placeholder": "Enter Exam Name"}))
