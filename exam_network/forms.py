@@ -70,7 +70,7 @@ class ProfileForm(forms.ModelForm):
 class CourseForm(forms.ModelForm):
     name = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
         attrs={"class": "", "placeholder": "Enter Course Name."}))
-    description = forms.Textarea(label_suffix='', required=True, widget=forms.TextInput(
+    description = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
         attrs={"class": "", "placeholder": "Enter Course Description."}))
 
     class Meta:
@@ -93,12 +93,12 @@ class ExamForm(forms.ModelForm):
     date_available = forms.DateTimeField(
         label_suffix='',
         required=True,
-        label="Date Available:",
+        label="Date Available",
         widget=forms.SplitDateTimeWidget)
     deadline = forms.DateTimeField(
         label_suffix='',
         required=True,
-        label="Deadline:",
+        label="Deadline",
         widget=forms.SplitDateTimeWidget)
 
     class Meta:
