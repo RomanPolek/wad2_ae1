@@ -85,6 +85,32 @@ class ExamForm(forms.ModelForm):
         model = Exam
         fields = ('title', 'date_available', 'deadline')
 
+    def clean_date_available(self):
+        now = datetime.datetime.now()
+        date_available = self.cleaned_data.get('date_available')
+        if date_available < now:
+            raise forms.ValidationError(
+                ("Date available must be in future."),
+                code='past_date_available',
+            )
+        return date_available
+
+    def clean_deadline(self):
+        now = datetime.datetime.now()
+        date_available = self.cleaned_data.get('date_available')
+        deadline = self.cleaned_data.get('deadline')
+        if deadline < now:
+            raise forms.ValidationError(
+                ("Deadline must be in future."),
+                code='past_deadline',
+            )
+        elif deadline < date_available:
+            raise forms.ValidationError(
+                ("Date must be in future."),
+                code='past_date',
+            )
+        return deadline
+
 
 class QuestionForm(forms.ModelForm):
     content = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
