@@ -11,7 +11,7 @@
         {%csrf_token%}
         {%for question in exam.questions.all%}
             <div class="question black_border">
-                <h1>Question 1</h1>
+                <h1>Question {{ forloop.counter }}</h1>
                 <p>{{question.content}}</p>
                 <label><input type="radio" name="question_{{forloop.counter0}}" required>{{question.choice_0}}</label>
                 <label><input type="radio" name="question_{{forloop.counter0}}" required>{{question.choice_1}}</label>
