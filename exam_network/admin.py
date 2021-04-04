@@ -4,7 +4,7 @@ from exam_network.models import Course, Profile, Exam, Submission, Question, Ans
 from django.contrib.auth.models import User
 
 
-class ProfileAdminForm(forms.ModelForm):
+class UserAdminForm(forms.ModelForm):
     course_set = forms.ModelMultipleChoiceField(
         label='Courses', queryset=Course.objects.all(), required=False,
         widget=admin.widgets.FilteredSelectMultiple(
@@ -18,12 +18,12 @@ class ProfileAdminForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(ProfileAdminForm, self).__init__(*args, **kwargs)
+        super(UserAdminForm, self).__init__(*args, **kwargs)
 
         if self.instance and self.instance.id:
             # Depending on the Role, the Course field should be either Courses taken or taught
             # Set the initial field value to either 'course_set' for Students or 'taught' for Teachers
-            if self.instance.profile.role == 'Student':
+            if self.instance.profile.role == 'S':
                 self.fields['course_set'].initial = self.instance.course_set.all()
             else:
                 self.fields['course_set'].initial = self.instance.taught.all()
@@ -32,7 +32,7 @@ class ProfileAdminForm(forms.ModelForm):
             self.fields['course_set'].label += ' taken' if self.instance.profile.role == 'S' else ' taught'
 
     def save(self, commit=True):
-        user = super(ProfileAdminForm, self).save(commit=False)
+        user = super(UserAdminForm, self).save(commit=False)
 
         if commit:
             user.save()
@@ -58,9 +58,9 @@ class ProfileInline(admin.StackedInline):
 
 class UserAdmin(admin.ModelAdmin):
     inlines = (ProfileInline, )
-    list_display = ('username', 'email', 'first_name', 'last_name')
-    form = ProfileAdminForm
-    fields = ['username', 'email', 'first_name', 'last_name']
+    list_display = ('username', 'email', 'first_name', 'last_name', 'profile')
+    form = UserAdminForm
+    fields = ['username', 'email', 'first_name', 'last_name', 'course_set']
 
 
 class CourseAdminForm(forms.ModelForm):

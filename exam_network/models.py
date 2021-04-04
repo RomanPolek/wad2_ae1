@@ -12,12 +12,13 @@ class Profile(models.Model):
     class Role(models.TextChoices):
         STUDENT = ('S', 'Student')
         TEACHER = ('T', 'Teacher')
+        NONE = ('N', 'None')
 
     role = models.CharField(
-        max_length=1, choices=Role.choices, default=Role.STUDENT)
+        max_length=1, choices=Role.choices, default=Role.NONE)
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"{self.user.first_name} {self.user.last_name} ({self.role})"
 
 
 @receiver(post_save, sender=User)
@@ -26,9 +27,8 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
     instance.profile.save()
 
+
 # Course taken by many Students and taught by one (more than one?) Teacher
-
-
 class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
