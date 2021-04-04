@@ -7,6 +7,7 @@ from .models import Exam, Course, Question
 from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
+from django.utils.timezone import make_aware
 
 def error(request, message, error):
     return render(request, 'exam_network/error.html', status=error, context={"message": message, "error": error})
@@ -63,6 +64,8 @@ def process_account_edit(request, return_url_name, create):
     return redirect(reverse('exam_network:' + return_url_name))
 
 def get_courses(request):
+    if not request.user.is_authenticated:
+        return Course.objects.none()
     if request.user.profile.role == "S":
         return Course.objects.filter(students__in=[request.user])
     elif request.user.profile.role == "T":
@@ -189,8 +192,62 @@ def add_course(request):
 def add_students(request):
     return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
 
+def get_datetime(datetime_string):
+    result = datetime.datetime.strptime(datetime_string, "%Y-%m-%dT%H:%M")
+    return make_aware(result) #expecting that all the times will be in UTC timezone
+
 def add_exam(request):
-    return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
+    if request.method == "POST":
+        courses = get_courses(request)
+        if not request.user.is_authenticated:
+            return error(request, "you are not logged in", 403)
+        elif request.user.profile.role != "T":
+            return error(request, "you do not have permission to add exam", 403)
+        else:
+            #try:
+                course = courses.get(id=request.POST.get("course_id"))
+                title = request.POST.get("title")
+                date_available = get_datetime(request.POST.get("date_available"))
+                deadline = get_datetime(request.POST.get("deadline"))
+
+                now = make_aware(datetime.datetime.now())
+                try:
+                    Exam.objects.get(title__eq = title) #check if exists
+                    return error(request, "exam with this name already exists", 403)
+                except:
+                    pass
+                if title == None or title.strip() == "":
+                    return error(request, "the exam title is emty", 403)
+                if deadline < date_available:
+                    return error(request, "the deadline of the exam is before date available", 403)
+                if deadline < now:
+                    return error(request, "the deadline of the exam is in the past", 403)
+
+                exam = Exam.objects.create(title=title, course=course, date_available=date_available, deadline=deadline)
+
+                #get questions
+                counter = 0
+                while True:
+                    if ("question_" + str(counter)) in request.POST:
+                        question = Question.objects.create(content=request.POST.get("question_" + str(counter)),
+                            choice_0=request.POST.get("answer_" + str(counter) + "_0"),
+                            choice_1=request.POST.get("answer_" + str(counter) + "_1"),
+                            choice_2=request.POST.get("answer_" + str(counter) + "_2"),
+                            choice_3=request.POST.get("answer_" + str(counter) + "_3"),
+                            choice_4=request.POST.get("answer_" + str(counter) + "_4"),
+                            correct_answer=int(request.POST.get("correct_answer_" + str(counter)))
+                        )
+                        question.save()
+                        exam.questions.add(question)
+                        counter += 1
+                    else:
+                        break
+                exam.save()
+                return redirect(reverse('exam_network:exams'))
+            #except:
+                #return error(request, "you do not have permission to add exam into this course", 403)
+    else:
+        return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
 
 def about_us(request):
     return render(request, 'exam_network/about_us.html')
