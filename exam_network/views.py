@@ -75,7 +75,7 @@ def get_courses(request):
 
 def get_exams(courses):
     now = datetime.datetime.now()
-    return Exam.objects.filter(course__in=courses, date_available__lte=now, deadline__gte=now)
+    return Exam.objects.filter(course__in=courses, deadline__gte=now).order_by("date_available")
 
 def signup(request):
     if request.user.is_authenticated:
@@ -212,7 +212,7 @@ def add_exam(request):
 
                 now = make_aware(datetime.datetime.now())
                 try:
-                    Exam.objects.get(title__eq = title) #check if exists
+                    Exam.objects.get(title = title) #check if exists
                     return error(request, "exam with this name already exists", 403)
                 except:
                     pass
@@ -260,12 +260,15 @@ def exams(request, id=None):
     courses = get_courses(request)
     exams = get_exams(courses)
     current_course = False
-
+    now = make_aware(datetime.datetime.now())
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
     elif len(exams.filter(id=id)) != 0:
         #this id is an exam
-        return render(request, 'exam_network/exam.html', {"exam":exams.filter(id=id)})
+        try:
+            return render(request, 'exam_network/exam.html', {"exam":exams.get(id=id, date_available__lte=now, deadline__gt=now)})
+        except:
+            return error(request, "this exam does not exist", 403)
     
     #if the id is course filter exams based on this course
     try:
@@ -273,7 +276,7 @@ def exams(request, id=None):
         exams = exams.filter(course=current_course)
     except:
         pass
-    return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course})
+    return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course, "now": now})
 
 def help(request):
     return render(request, 'exam_network/help.html')
