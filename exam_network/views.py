@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
 from .models import Exam, Course, Question, Profile, Submission
-from .forms import UserForm, ProfileForm
+from .forms import UserForm, ProfileForm, ExamForm, QuestionForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
@@ -65,14 +65,16 @@ def process_account_edit(request, return_url_name, create):
 
 
 def signup(request):
-    context_dict = {'user_form_errors': None, 'profile_form_errors': None}
+    context_dict = {}
     is_registered = False
     if request.user.is_authenticated:
         return error(request, "you are already logged in", 403)
-    elif request.method == "POST":
+    user_form = None
+    profile_form = None
+    if request.method == "POST":
         user_form = UserForm(request.POST)
         profile_form = ProfileForm(request.POST)
-        if (user_form.is_valid() and profile_form.is_valid()):
+        if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
             user.set_password(user.password)
             user.save()
@@ -81,9 +83,6 @@ def signup(request):
             profile.save()
             is_registered = True
             login(request, user)
-        else:
-            context_dict['user_form_errors'] = user_form.errors
-            context_dict['profile_form_errors'] = profile_form.errors
     else:
         user_form = UserForm()
         profile_form = ProfileForm()
@@ -200,8 +199,18 @@ def add_exam(request):
     if(request.user.profile.role != 'T'):
         return error(request, "Unauthorised Access.", 401)
     context_dict = {}
+    is_completed = False
+    exam_form = None
     if request.method == 'POST':
-        # TODO: Exam form
+        exam_form = ExamForm(request.POST)
+        if exam_form.is_valid():
+            exam = exam_form.save()
+            exam.save()
+            is_completed = True
+    else:
+        exam_form = ExamForm()
+    context_dict['completed'] = is_completed
+    context_dict['exam_form'] = exam_form
     return render(request, 'exam_network/add_exam.html', context_dict)
 
 
