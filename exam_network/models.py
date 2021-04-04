@@ -4,17 +4,21 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import uuid
 
+
 class Profile(models.Model):
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, primary_key=True, on_delete=models.CASCADE)
 
     class Role(models.TextChoices):
         STUDENT = ('S', 'Student')
         TEACHER = ('T', 'Teacher')
 
-    role = models.CharField(max_length=1, choices=Role.choices, default=Role.STUDENT)
+    role = models.CharField(
+        max_length=1, choices=Role.choices, default=Role.STUDENT)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -23,6 +27,8 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     instance.profile.save()
 
 # Course taken by many Students and taught by one (more than one?) Teacher
+
+
 class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)

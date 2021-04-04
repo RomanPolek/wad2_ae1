@@ -60,7 +60,7 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (ProfileInline, )
     list_display = ('username', 'email', 'first_name', 'last_name')
     form = ProfileAdminForm
-    fields = ['username', 'password', 'email', 'first_name', 'last_name']
+    fields = ['username', 'email', 'first_name', 'last_name']
 
 
 class CourseAdminForm(forms.ModelForm):
