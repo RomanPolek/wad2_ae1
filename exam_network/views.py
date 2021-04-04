@@ -190,8 +190,25 @@ def add_course(request):
     else:
         return render(request, 'exam_network/add_course.html')
 
+
+@login_required
 def add_students(request):
-    return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
+    context_dict = {'course_form_error': None, 'student_form_error': None}
+    if(request.user.profile.role != 'T'):
+        return error(request, "Unauthorised Access.", 401)
+    context_dict['courses'] = Course.objects.filter(authorised=request.user)
+    if request.method == 'POST':
+        course_name = request.POST.get('course_name')
+        email = request.POST.get('student_email')
+        try:
+            course = Course.objects.get(name=course_name)
+            student = User.objects.get(email=email)
+            course.authorised.add(student)
+        except Course.DoesNotExist:
+            context_dict['course_form_error'] = "Invalid Course."
+        except User.DoesNotExist:
+            context_dict['student_form_error'] = "Invalid Student Email."
+    return render(request, 'exam_network/add_students.html', context_dict)
 
 
 @login_required
