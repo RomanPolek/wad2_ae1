@@ -43,7 +43,7 @@ def process_account_edit(request, return_url_name, create):
     user = None
     if create:
         try:
-            User.objects.get(username__eq=username) #check if this user exists
+            User.objects.get(username=username) #check if this user exists
             return error(request, "this email is already taken", 403)
         except:
             user = User.objects.create(username=username) #doesnt exist so create

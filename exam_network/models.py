@@ -5,8 +5,7 @@ from django.dispatch import receiver
 import uuid
 
 class Profile(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
 
     class Role(models.TextChoices):
         STUDENT = ('S', 'Student')
