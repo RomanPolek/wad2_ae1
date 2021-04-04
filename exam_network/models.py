@@ -4,15 +4,18 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import uuid
 
+
 class Profile(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4().hex, editable=False)
+    id = models.UUIDField(
+        primary_key=True, default=uuid.uuid4().hex, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     class Role(models.TextChoices):
         STUDENT = ('S', 'Student')
         TEACHER = ('T', 'Teacher')
 
-    role = models.CharField(max_length=1, choices=Role.choices, default=Role.STUDENT)
+    role = models.CharField(
+        max_length=1, choices=Role.choices, default=Role.STUDENT)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -30,9 +33,14 @@ class Course(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=50)
     authorised = models.ManyToManyField(User)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
 
 # Exam taken by a student
@@ -42,9 +50,14 @@ class Exam(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     date_available = models.DateTimeField()
     deadline = models.DateTimeField()
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return f"{self.title} ({self.course})"
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
 
 # Question to be asked as part of an exam
