@@ -36,7 +36,7 @@ def process_account_edit(request, return_url_name, create):
         return error(request, "the surname is empty", 403)
     if first_name == None or first_name.strip() == "":
         return error(request, "the name is empty", 403)
-    
+
     #passed checks
     user = None
     if create:
@@ -86,25 +86,20 @@ def user_login(request):
     else:
         return render(request, 'exam_network/login.html')
 
+@login_required
 def account(request):
-    if not request.user.is_authenticated:
-        return error(request, "you are not logged in", 403)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         return process_account_edit(request, 'index', False)
     else:
         return render(request, 'exam_network/account.html')
-    
 
 def contact(request):
     return render(request, 'exam_network/contact.html')
 
-
+@login_required
 def user_logout(request):
-    if not request.user.is_authenticated:
-        return error(request, "you are not logged in", 403)
-    else:
-        logout(request)
-        return redirect(reverse('exam_network:index'))
+    logout(request)
+    return redirect(reverse('exam_network:index'))
 
 
 def show_exams(request, course_name):
@@ -155,7 +150,7 @@ def add_course(request):
         #get data
         name = request.POST.get('course_name')
         details = request.POST.get('details')
-        
+
         #perform checks
         if name == None or name.strip() == "":
             return error(request, "the course name is not filled in", 403)
@@ -182,15 +177,14 @@ def about_us(request):
 def exam_result(request):
     return render(request, 'exam_network/exam_result.html')
 
+@login_required
 def exams(request, id=None):
     #get the available exams
     courses = None
     exams = Exam.objects.all()
     current_course = False
 
-    if not request.user.is_authenticated:
-        return error(request, "you are not logged in", 403)
-    elif len(Exam.objects.filter(id=id)) != 0:
+    if len(Exam.objects.filter(id=id)) != 0:
         #this id is an exam
         return render(request, 'exam_network/exam.html', {"exam":Exam.objects.filter(id=id)})
     elif request.user.profile.role == "S":
@@ -207,6 +201,7 @@ def exams(request, id=None):
     except:
         pass
     return render(request, 'exam_network/exams.html', {"courses":courses, "exams": exams, "current_course": current_course})
+
 def help(request):
     return render(request, 'exam_network/help.html')
 
