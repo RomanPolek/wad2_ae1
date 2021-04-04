@@ -20,6 +20,34 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email', 'password',)
 
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if len(password) < 8:
+            raise forms.ValidationError(
+                ('Password too short.'),
+                code='invalid_password_len',
+            )
+        return password
+
+    def clean_conform_password(self):
+        password1 = self.cleaned_data.get("password")
+        password2 = self.cleaned_data.get("conform_password")
+        if password1 != password2:
+            raise forms.ValidationError(
+                ('Password mismatch.'),
+                code='password_mismatch',
+            )
+        return password2
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).count() != 0:
+            raise forms.ValidationError(
+                ("This email is already in use."),
+                code='email_in_use',
+            )
+        return email
+
 
 class ProfileForm(forms.ModelForm):
     ROLES = [('S', 'Student'), ('T', 'Teacher')]
@@ -29,3 +57,12 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('role',)
+
+    def clean_role(self):
+        role = self.cleaned_data.get('role')
+        if role != 'S' and role != 'T':
+            raise forms.ValidationError(
+                ("Invalid role."),
+                code='invalid_role',
+            )
+        return role
