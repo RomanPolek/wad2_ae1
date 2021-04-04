@@ -106,9 +106,12 @@
     display: inline-block;
 }
 
-.deadline {
-    float: left;
+.exam_bottom {
     padding-top: 20px;
+}
+
+.exam_bottom > span{
+    float: left;
     font-size: 0.9em !important;
     font-weight: 400 !important;
 }
