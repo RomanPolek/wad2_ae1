@@ -29,7 +29,11 @@
     width: 450px;
 }
 
-#course_explorer > * {
+#course_explorer > a{
+    color: black;
+}
+
+#course_explorer > a > * {
     padding: 20px;
     width: 100%;
     margin-top: 20px;
@@ -100,4 +104,11 @@
 #statistics > div > div {
     text-align: left;
     display: inline-block;
+}
+
+.deadline {
+    float: left;
+    padding-top: 20px;
+    font-size: 0.9em !important;
+    font-weight: 400 !important;
 }

@@ -32,11 +32,17 @@
         <p class="text" style="text-align: center;">Looks like there are no exams in {%if current_course%}course {{current_course.name}}{%else%}your courses{%endif%}</p>
         {%endif%}
         {%for exam in exams%}
-            <div class="black_border">
-                <h1>exam.title</h1>
-                <p>Your Score: </p><span>97%</span><br>
-                <p>Your Grade: </p><span>A</span>
-            </div>
+            <a href="{%url 'exam_network:exams' exam.id%}">
+                <div class="black_border">
+                    <h1>{{exam.title}}</h1>
+                    <p>Your Score: </p><span>97%</span><br>
+                    <p>Your Grade: </p><span>A</span><br>
+                    <div style="text-align: right;">
+                        <span class="deadline">deadline: <b>{{exam.deadline}}</b></span>
+                        <button class="blue_button">Start</button>
+                    </div>
+                </div>
+            </a>
         {%endfor%}
     </div>
 </div>
