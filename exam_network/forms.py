@@ -5,15 +5,15 @@ from exam_network.models import Profile, Course, Question, Exam, Answer, Submiss
 
 
 class UserForm(forms.ModelForm):
-    first_name = forms.CharField(required=True, widget=forms.TextInput(
+    first_name = forms.CharField(required=True, label_suffix='', widget=forms.TextInput(
         attrs={"class": "input_row", "placeholder": "Enter First Name"}))
-    last_name = forms.CharField(required=True, widget=forms.TextInput(
+    last_name = forms.CharField(required=True, label_suffix='', widget=forms.TextInput(
         attrs={"class": "input_row", "placeholder": "Enter Last Name"}))
-    email = forms.EmailField(required=True, widget=forms.TextInput(
+    email = forms.EmailField(required=True, label_suffix='', widget=forms.TextInput(
         attrs={"class": "input_row", "placeholder": "Enter Email"}))
-    password = forms.CharField(required=True, widget=forms.PasswordInput(
+    password = forms.CharField(required=True, label_suffix='', widget=forms.PasswordInput(
         attrs={"class": "input_row", "placeholder": "Enter Password"}))
-    conform_password = forms.CharField(required=True, widget=forms.PasswordInput(
+    confirm_password = forms.CharField(required=True, label_suffix='', widget=forms.PasswordInput(
         attrs={"class": "input_row", "placeholder": "Re-enter Password"}))
 
     class Meta:
@@ -51,8 +51,7 @@ class UserForm(forms.ModelForm):
 
 class ProfileForm(forms.ModelForm):
     ROLES = [('S', 'Student'), ('T', 'Teacher')]
-    role = forms.ChoiceField(
-            choices=ROLES, widget=forms.RadioSelect)
+    role = forms.ChoiceField(label_suffix='', choices=ROLES, widget=forms.RadioSelect)
 
     class Meta:
         model = Profile
@@ -66,3 +65,47 @@ class ProfileForm(forms.ModelForm):
                 code='invalid_role',
             )
         return role
+
+
+class ExamForm(forms.ModelForm):
+    title = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "", "placeholder": "Enter Exam Name"}))
+    date_available = forms.DateTimeField(
+        label_suffix='',
+        required=True,
+        label="Date Available:",
+        widget=forms.SplitDateTimeWidget)
+    deadline = forms.DateTimeField(
+        label_suffix='',
+        required=True,
+        label="Deadline:",
+        widget=forms.SplitDateTimeWidget)
+
+    class Meta:
+        model = Exam
+        fields = ('title', 'date_available', 'deadline')
+
+
+class QuestionForm(forms.ModelForm):
+    content = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "input_row", "placeholder": "Enter Question."}))
+    choice_1 = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "input_row", "placeholder": "Enter Choice 1."}))
+    choice_2 = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "input_row", "placeholder": "Enter Choice 2."}))
+    choice_3 = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "input_row", "placeholder": "Enter Choice 3."}))
+    choice_4 = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "input_row", "placeholder": "Enter Choice 4."}))
+    choice_5 = forms.CharField(label_suffix='', required=True, widget=forms.TextInput(
+        attrs={"class": "input_row", "placeholder": "Enter Choice 5."}))
+    ANSWER = [(i, str(i)) for i in range(1, 6)]
+    correct_answer = forms.ChoiceField(label_suffix='', required=True, choices=ANSWER)
+
+    class Meta:
+        model = Question
+        fields = (
+            'content',
+            'choice_1', 'choice_2', 'choice_3', 'choice_4', 'choice_5',
+            'correct_answer'
+        )
