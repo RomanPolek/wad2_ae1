@@ -3,6 +3,7 @@ from django import forms
 from exam_network.models import Course, Profile, Exam, Submission, Question, Answer
 from django.contrib.auth.models import User
 
+
 class ProfileAdminForm(forms.ModelForm):
     course_set = forms.ModelMultipleChoiceField(
         label='Courses', queryset=Course.objects.all(), required=False,
@@ -47,11 +48,13 @@ class ProfileAdminForm(forms.ModelForm):
 
         return user
 
+
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
+
 
 class UserAdmin(admin.ModelAdmin):
     inlines = (ProfileInline, )
@@ -101,7 +104,7 @@ class CourseAdmin(admin.ModelAdmin):
     # Filter out Students from the Teacher dropdown
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "teacher":
-            kwargs["queryset"] = User.objects.filter(role='Teacher')
+            kwargs["queryset"] = User.objects.filter(profile__role='T')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
