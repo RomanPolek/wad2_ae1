@@ -29,11 +29,7 @@
     width: 450px;
 }
 
-#course_explorer > a{
-    color: black;
-}
-
-#course_explorer > a > * {
+#course_explorer > * {
     padding: 20px;
     width: 100%;
     margin-top: 20px;

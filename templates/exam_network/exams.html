@@ -35,7 +35,6 @@
         {%for exam in exams%}
             <!-- BUG: formatting seems to break if this <a> is removed, no idea why -->
             {%get_submission request.user exam as submission%}
-            <a {%if exam.date_available < now%}href="{%url 'exam_network:exams' exam.id%}"{%endif%}>
                 <div class="black_border" {%if exam.date_available > now%}style="color:gray;"{%endif%}>
                     <h1>{{exam.title}}</h1>
                     {% if user_role == "S" %}
@@ -64,7 +63,6 @@
                         {% endif %}
                     </div>
                 </div>
-            </a>
         {%endfor%}
     </div>
 </div>
