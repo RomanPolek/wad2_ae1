@@ -82,7 +82,13 @@ def get_courses(request):
         return Course.objects.none()
 
 
-def get_exams(courses):
+def get_exams(request, courses):
+    if not request.user.is_authenticated:
+        return Exam.objects.none()
+    if request.user.profile.role == "T":
+        return Exam.objects.filter(course__in=courses).order_by("date_available")
+        
+    #else return for students
     now = datetime.datetime.now()
     return Exam.objects.filter(course__in=courses, deadline__gte=now).order_by("date_available")
 
@@ -389,7 +395,7 @@ def exam_remove(request, id):
 def exams(request, id=None):
     # get the available exams
     courses = get_courses(request)
-    exams = get_exams(courses)
+    exams = get_exams(request, courses)
     current_course = False
     now = make_aware(datetime.datetime.now())
     if not request.user.is_authenticated:

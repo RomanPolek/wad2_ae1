@@ -19,3 +19,10 @@ def get_submission(user, exam):
         return Submission.objects.get(student=user, exam=exam)
     except:
         return None
+
+@register.simple_tag
+def get_all_submission(exam):
+    try:
+        return Submission.objects.filter(exam=exam)
+    except:
+        return None

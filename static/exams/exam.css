@@ -72,3 +72,37 @@
 #exam_result p {
     margin: 0;
 }
+
+#class_results h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.class_results_row {
+    padding: 0px 20px 0px 20px;
+    position: relative;
+    margin: 15px 40px 15px 40px !important;
+}
+
+.class_results_row * {
+    margin: 0;
+}
+
+.class_results_row span {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.class_results_row span:first-of-type {
+    position: absolute;
+    left: 0px;
+    top: 0;
+    
+}
+
+.class_results_row span:last-of-type {
+    position: absolute;
+    right: 0px;
+    top: 0;
+}

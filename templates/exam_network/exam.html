@@ -40,5 +40,26 @@
             {%endif%}
         </div>
     </form>
+    {%if request.user.profile.role == "T"%}
+    {%get_all_submission exam as submissions%}
+    <div id="class_results" class="black_border">
+        {%if submissions%}
+            <h1>Submissions</h1>
+            {%for submission in submissions%}
+                {%if forloop.counter0 != 0%}<hr>{%endif%}
+                <div class="class_results_row">
+                    <span>{{submission.student.first_name}} {{submission.student.last_name}}</span>
+                    <span>{{submission.student.email}}</span>
+                    <span>{{submission.percentage}}%</span>
+                </div>
+            {%endfor%}
+        {%else%}
+        <h1>There are no submissions from students yet</h1>
+        {%endif%}
+    </div>
+    <div style="text-align: right;">
+        <a href="{%url 'exam_network:exams'%}"><button type="button" class="gray_button">Finish</button></a>
+    </div>
+    {%endif%}
 </div>
 {% endblock %}
