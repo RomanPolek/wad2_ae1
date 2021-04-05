@@ -354,7 +354,8 @@ def exam_edit(request, id):
 
             exam.save()
             return redirect(reverse('exam_network:exams'))
-        except:
+        except Exception as e:
+            print("exception: ", e)
             return error(request, "you do not have permission to edit an exam in this course", 403)
     else:
         try:

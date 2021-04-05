@@ -112,7 +112,6 @@ class ExamAdmin(admin.ModelAdmin):
     list_display = ('title', 'course', 'date_available', 'deadline')
 
 
-# TODO: do we need exams the question is added to or not?
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ('content', 'correct_answer')
 
