@@ -145,6 +145,7 @@ def show_exams(request, course_name):
     except Course.DoesNotExist:
         context_dict['course'] = None
         context_dict['exams'] = None
+
     return render(request, 'exam_network/exams.html', context=context_dict)
 
 
@@ -215,7 +216,8 @@ def add_students(request):
             return error(request, "you do not have permission to add students", 403)
         else:
             try:
-                course = courses.get(id=request.POST.get("course_id"), teacher=request.user)
+                course = courses.get(id=request.POST.get(
+                    "course_id"), teacher=request.user)
                 students = request.POST.get("students").split(",")
                 excluded_students = []
                 for student in students:
@@ -223,20 +225,23 @@ def add_students(request):
                     try:
                         student_object = User.objects.get(email=student)
                         if student_object.profile.role != "S":
-                            raise Exception("user is not a student") #gets catched in except
+                            # gets catched in except
+                            raise Exception("user is not a student")
                         if student_object in course.students.all():
-                            raise Exception("user is already in the course") #gets catched in except
+                            # gets catched in except
+                            raise Exception("user is already in the course")
                         if student_object == course.teacher:
-                            raise Exception("user is a teacher") #gets catched in except
+                            # gets catched in except
+                            raise Exception("user is a teacher")
 
                         course.students.add(student_object)
                     except:
                         excluded_students.append(student)
-                
+
                 if len(excluded_students) == len(students):
-                    return error(request, "the operation was not successful. None of these students were added: " + ", ".join(excluded_students), 403)    
+                    return error(request, "the operation was not successful. None of these students were added: " + ", ".join(excluded_students), 403)
                 if len(excluded_students) != 0:
-                    return error(request, "the operation was succesfull but these students were not added: " + ", ".join(excluded_students), 0)    
+                    return error(request, "the operation was succesfull but these students were not added: " + ", ".join(excluded_students), 0)
                 else:
                     return redirect(reverse('exam_network:exams'))
             except:
@@ -262,7 +267,8 @@ def add_exam(request):
             try:
                 course = courses.get(id=request.POST.get("course_id"))
                 title = request.POST.get("title")
-                date_available = get_datetime(request.POST.get("date_available"))
+                date_available = get_datetime(
+                    request.POST.get("date_available"))
                 deadline = get_datetime(request.POST.get("deadline"))
 
                 now = make_aware(datetime.datetime.now())
@@ -286,7 +292,8 @@ def add_exam(request):
                 while True:
                     if ("question_" + str(counter)) in request.POST:
                         question = Question.objects.create(
-                            content=request.POST.get("question_" + str(counter)),
+                            content=request.POST.get(
+                                "question_" + str(counter)),
                             choice_0=request.POST.get(
                                 "answer_" + str(counter) + "_0"),
                             choice_1=request.POST.get(
@@ -342,7 +349,12 @@ def exams(request, id=None):
         exams = exams.filter(course=current_course)
     except:
         pass
-    return render(request, 'exam_network/exams.html', {"courses": courses, "exams": exams, "current_course": current_course, "now": now})
+
+    context_dict = {"courses": courses, "exams": exams,
+                    "user_role": request.user.profile.role,
+                    "current_course": current_course, "now": now}
+
+    return render(request, 'exam_network/exams.html', context_dict)
 
 
 def help(request):
