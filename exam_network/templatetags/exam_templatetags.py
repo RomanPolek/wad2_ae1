@@ -5,7 +5,10 @@ register = template.Library()
 
 @register.simple_tag
 def get_answer(l, question):
-    return l.get(question=question).answer
+    try:
+        return l.get(question=question).answer
+    except:
+        return -1
     
 @register.filter(name='times') 
 def times(number):
@@ -26,3 +29,37 @@ def get_all_submission(exam):
         return Submission.objects.filter(exam=exam)
     except:
         return None
+
+@register.simple_tag
+def get_student_performance(user):
+    submissions = Submission.objects.filter(student=user)
+    maximum = 0
+    minimum = 100
+    average = 0
+    for submission in submissions:
+        if submission.percentage > maximum:
+            maximum = submission.percentage
+        if submission.percentage < minimum:
+            minimum = submission.percentage
+        average += submission.percentage
+    if len(submissions) > 0:
+        average /= len(submissions)
+    else:
+        minimum = 0
+    
+    return [maximum, minimum, average]
+
+@register.simple_tag
+def get_course_performance(course):
+    course_performance = [0,0,0,0]
+    for student in course.students.all():
+        current = get_student_performance(student)
+        course_performance[0] += current[0]
+        course_performance[1] += current[1]
+        course_performance[2] += current[2]
+    course_performance[3] = len(course.students.all())
+    if course_performance[3] > 0:
+        course_performance[0] /= course_performance[3]
+        course_performance[1] /= course_performance[3]
+        course_performance[2] /= course_performance[3]
+    return course_performance

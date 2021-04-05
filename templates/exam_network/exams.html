@@ -9,23 +9,27 @@
             <a href="{%url 'exam_network:exams' course.id%}"><button class="blue_button {%if current_course == course%}selected{%endif%}">{{course.name}}</button></a>
         {%endfor%}
         <div id="statistics" class="black_border" {%if user_role != "S"%}style="visibility:hidden;"{%endif%}>
-            <h1>Statistics</h1>
+            {%get_student_performance user as student_performance%}
+            <h1>Cummulative Statistics</h1>
             <div>
                 <h5>Your Performance</h5>
                 <div>
-                    <p>Highest Score: </p><span>97%</span><br>
-                    <p>Lowest Score: </p><span>80%</span><br>
-                    <p>Average: </p><span>90%</span>
+                    <p>Highest Score: </p><span>{{student_performance.0}}%</span><br>
+                    <p>Lowest Score: </p><span>{{student_performance.1}}%</span><br>
+                    <p>Average: </p><span>{{student_performance.2}}%</span>
                 </div>
             </div>
-            <div>
-                <h5>Course Performance</h5>
+            {%if current_course%}
+                {%get_course_performance current_course as course_performance%}
                 <div>
-                    <p>Highest Score: </p><span>97%</span><br>
-                    <p>Lowest Score: </p><span>80%</span><br>
-                    <p>Average: </p><span>90%</span>
+                    <h5>Course Performance</h5>
+                    <div>
+                        <p>Highest Score: </p><span>{{course_performance.0}}%</span><br>
+                        <p>Lowest Score: </p><span>{{course_performance.1}}%</span><br>
+                        <p>Average: </p><span>{{course_performance.2}}%</span>
+                    </div>
                 </div>
-            </div>
+            {%endif%}
         </div>
     </div>
     <div id="course_explorer">
@@ -34,7 +38,7 @@
         {%endif%}
         {%for exam in exams%}
             {%get_submission request.user exam as submission%}
-            <div class="black_border" {%if exam.date_available > now%}style="color:gray;"{%endif%}>
+            <div class="black_border" {%if exam.date_available > now or exam.deadline < now%}style="color:gray;"{%endif%}>
                 <h1>{{exam.title}}</h1>
                 {% if user_role == "S" %}
                     {%if submission%}
