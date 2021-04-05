@@ -23,9 +23,11 @@
                     <a href="{%url 'exam_network:signup'%}"><button class="blue_button">Sign up</button></a>
                     <a href="{%url 'exam_network:login'%}"><button class="blue_button">Log in</button></a>
                 {%else%}
+                    <div>
+                        <a href="{%url 'exam_network:account'%}"><button class="blue_button">Your Account</button></a>
+                        <a href="{%url 'exam_network:user_logout'%}"><button class="blue_button">Log Out</button></a>
+                    </div>
                     <span>{{user.email}}</span>
-                    <a href="{%url 'exam_network:account'%}"><button class="blue_button">Your Account</button></a>
-                    <a href="{%url 'exam_network:user_logout'%}"><button class="blue_button">Log Out</button></a>
                 {%endif%}
             </div>
         </div>
