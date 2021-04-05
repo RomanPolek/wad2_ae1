@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 import uuid
 
@@ -72,6 +73,13 @@ class Exam(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.course})"
+
+
+@receiver(pre_delete, sender=Exam)
+def pre_delete_exam(sender, instance, **kwargs):
+    for question in list(instance.questions.all()):
+        if question.exam_set.count() == 1:
+            question.delete()
 
 
 # Answer given by a student while taking the exam, used for marking
