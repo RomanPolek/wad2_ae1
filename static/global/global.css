@@ -239,3 +239,10 @@ footer img {
         margin-right: auto;
     }    
 }
+
+#header span {
+    color: white;
+    font-weight: 500;
+    font-size: large;
+    padding-right: 15px;
+}

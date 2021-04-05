@@ -55,11 +55,13 @@ def get_student_performance(user, course):
 
 @register.simple_tag
 def get_course_performance(course):
-    course_performance = [0.0,0.0,0.0,0]
+    course_performance = [0.0,100.0,0.0,0]
     for student in course.students.all():
         current = get_student_performance(student, course)
-        course_performance[0] += current[0]
-        course_performance[1] += current[1]
+        if current[0] > course_performance[0]:
+            course_performance[0] = current[0]
+        if current[1] < course_performance[1]:
+            course_performance[1] = current[1]
         course_performance[2] += current[2]
     course_performance[3] = len(course.students.all())
     if course_performance[3] > 0:
