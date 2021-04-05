@@ -1,8 +1,16 @@
 {% extends "exam_network/base.html" %}
 {% block page_content %}
 {% load static %}
+{% load exam_templatetags %}
 <link rel="stylesheet" type="text/css" href="{% static 'exams/exam.css' %}">
 <div id="exam_wrapper">
+    {%if submission%}
+        <div id="exam_result" class="black_border">
+            <h1>Result: {{submission.percentage}}%</h1>
+            <h2>You got {{submission.score}} from {{submission.max_score}} points</h2>
+            <p>The exam was successfuly submitted. You can now view the correct answers</p>
+        </div>
+    {%endif%}
     <div id="exam_title" class="black_border">
         <h1>{{exam.title}}</h1>
         <p class="text">Available from {{exam.date_available}} to {{exam.deadline}}</p>
@@ -13,16 +21,23 @@
             <div class="question black_border">
                 <h1>Question {{ forloop.counter }}</h1>
                 <p>{{question.content}}</p>
-                <label><input type="radio" name="question_{{forloop.counter0}}" value="0" required>{{question.choice_0}}</label>
-                <label><input type="radio" name="question_{{forloop.counter0}}" value="1" required>{{question.choice_1}}</label>
-                <label><input type="radio" name="question_{{forloop.counter0}}" value="2" required>{{question.choice_2}}</label>
-                <label><input type="radio" name="question_{{forloop.counter0}}" value="3" required>{{question.choice_3}}</label>
-                <label><input type="radio" name="question_{{forloop.counter0}}" value="4" required>{{question.choice_4}}</label>
+                {%if submission%}
+                    {%get_answer submission.answers question as user_choice%}
+                {%endif%}
+                <label class="{%if user_choice and question.correct_answer == 0%}answer_correct_highlight{%elif user_choice == 0%}answer_user_highlight{%endif%}"><input type="radio" name="question_{{forloop.counter0}}" value="0" {%if submission%}disabled{%else%}required{%endif%} {%if user_choice == 0%}checked{%endif%}>{{question.choice_0}}</label>
+                <label class="{%if user_choice and question.correct_answer == 1%}answer_correct_highlight{%elif user_choice == 1%}answer_user_highlight{%endif%}"><input type="radio" name="question_{{forloop.counter0}}" value="1" {%if submission%}disabled{%else%}required{%endif%} {%if user_choice == 1%}checked{%endif%}>{{question.choice_1}}</label>
+                <label class="{%if user_choice and question.correct_answer == 2%}answer_correct_highlight{%elif user_choice == 2%}answer_user_highlight{%endif%}"><input type="radio" name="question_{{forloop.counter0}}" value="2" {%if submission%}disabled{%else%}required{%endif%} {%if user_choice == 2%}checked{%endif%}>{{question.choice_2}}</label>
+                <label class="{%if user_choice and question.correct_answer == 3%}answer_correct_highlight{%elif user_choice == 3%}answer_user_highlight{%endif%}"><input type="radio" name="question_{{forloop.counter0}}" value="3" {%if submission%}disabled{%else%}required{%endif%} {%if user_choice == 3%}checked{%endif%}>{{question.choice_3}}</label>
+                <label class="{%if user_choice and question.correct_answer == 4%}answer_correct_highlight{%elif user_choice == 4%}answer_user_highlight{%endif%}"><input type="radio" name="question_{{forloop.counter0}}" value="4" {%if submission%}disabled{%else%}required{%endif%} {%if user_choice == 4%}checked{%endif%}>{{question.choice_4}}</label>
             </div>
         {%endfor%}
         <div style="text-align: right;">
-            <button class="gray_button" type="button" onclick="window.history.back();">Cancel</button>
-            <button class="blue_button">Submit</button>
+            {%if not submission%}
+                <button class="gray_button" type="button" onclick="window.history.back();">Cancel</button>
+                <button class="blue_button">Submit</button>
+            {%else%}
+                <a href="{%url 'exam_network:exams'%}"><button type="button" class="gray_button">Finish</button></a>
+            {%endif%}
         </div>
     </form>
 </div>

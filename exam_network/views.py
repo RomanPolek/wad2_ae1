@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
 from django.urls import reverse
-from .models import Exam, Course, Question
+from .models import Exam, Course, Question, Submission, Answer
 from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
@@ -300,24 +300,48 @@ def exams(request, id=None):
         except:
             return error(request, "this exam does not exist", 403)
 
-        if request.method == "POST":
+        submission = None
+        try:
+            submission = Submission.objects.get(exam=exam, student=request.user) #check if submission exists
+        except:
+            pass
+            
+        if request.method == "POST" and request.user.profile.role == "S" and submission == None:
             #received submission
             counter = 0
             score = 0
             max_score = len(exam.questions.all())
             choices = []
             while True:
-                if ("question_" + counter) in request.POST:
-                    current = request.POST.get("question_" + counter)
+                if ("question_" + str(counter)) in request.POST:
+                    current = int(request.POST.get("question_" + str(counter)))
                     if current == exam.questions.all()[counter].correct_answer:
                         score += 1
                     choices.append(current)
                     counter += 1
                 else:
                     break
-            return render(request, 'exam_network/exam.html', {"exam": exam, "choices": choices, "score": score, "max_score": max_score})
-        else:
-            return render(request, 'exam_network/exam.html', {"exam": exam})
+            if len(choices) != len(exam.questions.all()):
+                return error(request, "there was a problem with your submission. This submission is not counted. Please try again", 403)
+            #save the result
+            percentage = round(score / max_score * 10000) / 100
+            submission = Submission.objects.create(exam=exam, student=request.user, score = score, max_score=max_score, percentage=percentage)
+            for i in range(len(choices)):
+                answer = Answer.objects.create(question=exam.questions.all()[i], answer=choices[i])
+                answer.save()
+                submission.answers.add(answer)
+            submission.save()
+            print("-----------------------")
+            print("user", request.user.email)
+            print("score:", score)
+            print("max_score:", max_score)
+            print(choices)
+            print("-----------------------")
+        elif request.user.profile.role == "T":
+            return error(request, "you do not have permission to submit an exam as a teacher", 403)
+        elif request.method == "POST" and submission != None:
+            return error(request, "this exam was already submitted by you", 403)
+        return render(request, 'exam_network/exam.html', {"exam": exam, "submission": submission})
 
     # if the id is course filter exams based on this course
     try:

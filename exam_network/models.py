@@ -96,7 +96,8 @@ class Submission(models.Model):
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     score = models.IntegerField()
+    max_score = models.IntegerField()
     answers = models.ManyToManyField(Answer)
-
+    percentage = models.FloatField()
     def __str__(self):
         return f"{self.exam} ({self.student})"

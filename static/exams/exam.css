@@ -46,3 +46,29 @@
     display: block;
     margin: 10px;
 }
+
+#exam_result {
+    padding: 20px;
+}
+
+.answer_correct_highlight, .answer_user_highlight {
+    border-style: solid;
+    border-width: 3px;
+    border-radius: 10px;
+}
+
+.answer_correct_highlight {
+    border-color: rgb(62, 128, 62);
+}
+
+.answer_user_highlight {
+    border-color: rgb(255, 115, 115);
+}
+
+#exam_result h1 {
+    font-size: large;
+}
+
+#exam_result p {
+    margin: 0;
+}

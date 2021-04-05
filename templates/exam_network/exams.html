@@ -1,6 +1,7 @@
 {% extends "exam_network/base.html" %}
 {% block page_content %}
 {% load static %}
+{% load exam_templatetags %}
 <link rel="stylesheet" type="text/css" href="{% static 'exams/exams.css' %}">
 <div id="exams_wrapper">
     <div id="course_navigator">
@@ -32,19 +33,22 @@
         <p class="text" style="text-align: center;">Looks like there are no exams in {%if current_course%}course {{current_course.name}}{%else%}your courses{%endif%}</p>
         {%endif%}
         {%for exam in exams%}
+            {%get_submission request.user exam as submission%}
             <a {%if exam.date_available < now%}href="{%url 'exam_network:exams' exam.id%}"{%endif%}>
                 <div class="black_border" {%if exam.date_available > now%}style="color:gray;"{%endif%}>
                     <h1>{{exam.title}}</h1>
                     {% if user_role == "S" %}
-                        <p>Your Score: </p><span>97%</span><br>
-                        <p>Your Grade: </p><span>A</span><br>
+                        {%if submission%}
+                            <p>Your Result: </p><span>{{submission.percentage}}%</span><br>
+                            <p>Your Score: </p><span>{{submission.score}} our of {{submission.max_score}} points</span><br>
+                        {%endif%}
                     {% endif %}
                     <div style="text-align: right;" class="exam_bottom">
                         <span>Open from: <b>{{exam.date_available}}</b></span>
                         <span>Deadline: <b>{{exam.deadline}}</b></span>
 
                         {% if user_role == "S" %}
-                            <button class="blue_button" {%if exam.date_available > now%}style="visibility:hidden;"{%endif%}>Start</button>
+                            <button class="{%if submission%}gray_button{%else%}blue_button{%endif%}" {%if exam.date_available > now%}style="visibility:hidden;"{%endif%}>{%if submission%}Review{%else%}Start{%endif%}</button>
                         {% elif user_role == "T" %}
                             <button class="blue_button">View</button>
                             <button class="blue_button">Edit</button>
