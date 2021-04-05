@@ -99,5 +99,31 @@ class Submission(models.Model):
     max_score = models.IntegerField()
     answers = models.ManyToManyField(Answer)
     percentage = models.FloatField()
+
     def __str__(self):
         return f"{self.exam} ({self.student})"
+
+
+@receiver(post_save, sender=Exam)
+def update_submission_scores(sender, instance, created, **kwargs):
+    max_score = len(instance.questions.all())
+    questions = {str(q.content) for q in list(instance.questions.all())}
+
+    submissions = Submission.objects.filter(exam=instance)
+    for submission in submissions:
+        score = 0
+
+        old_answers = list(submission.answers.all())
+        for answer in old_answers:
+            # question wasn't deleted, increase score if answer was correct
+            if str(answer.question.content) in questions:
+                print('answers', answer.answer, answer.question.correct_answer)
+                if answer.answer == answer.question.correct_answer:
+                    score += 1
+            else:
+                submission.answers.remove(answer)
+
+        submission.score = score
+        submission.max_score = max_score
+        submission.percentage = round(score / max_score * 10000) / 100
+        submission.save()
