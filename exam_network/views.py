@@ -206,7 +206,43 @@ def add_course(request):
 
 
 def add_students(request):
-    return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
+    courses = get_courses(request)
+
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return error(request, "you are not logged in", 403)
+        elif request.user.profile.role != "T":
+            return error(request, "you do not have permission to add students", 403)
+        else:
+            try:
+                course = courses.get(id=request.POST.get("course_id"), teacher=request.user)
+                students = request.POST.get("students").split(",")
+                excluded_students = []
+                for student in students:
+                    student = student.strip()
+                    try:
+                        student_object = User.objects.get(email=student)
+                        if student_object.profile.role != "S":
+                            raise Exception("user is not a student") #gets catched in except
+                        if student_object in course.students.all():
+                            raise Exception("user is already in the course") #gets catched in except
+                        if student_object == course.teacher:
+                            raise Exception("user is a teacher") #gets catched in except
+
+                        course.students.add(student_object)
+                    except:
+                        excluded_students.append(student)
+                
+                if len(excluded_students) == len(students):
+                    return error(request, "the operation was not successful. None of these students were added: " + ", ".join(excluded_students), 403)    
+                if len(excluded_students) != 0:
+                    return error(request, "the operation was succesfull but these students were not added: " + ", ".join(excluded_students), 0)    
+                else:
+                    return redirect(reverse('exam_network:exams'))
+            except:
+                return error(request, "you do not have permission to add students into this course", 403)
+    else:
+        return render(request, 'exam_network/add_students.html', {"courses": get_courses(request)})
 
 
 def get_datetime(datetime_string):
@@ -223,56 +259,56 @@ def add_exam(request):
         elif request.user.profile.role != "T":
             return error(request, "you do not have permission to add exam", 403)
         else:
-            # try:
-            course = courses.get(id=request.POST.get("course_id"))
-            title = request.POST.get("title")
-            date_available = get_datetime(request.POST.get("date_available"))
-            deadline = get_datetime(request.POST.get("deadline"))
-
-            now = make_aware(datetime.datetime.now())
             try:
-                Exam.objects.get(title=title)  # check if exists
-                return error(request, "exam with this name already exists", 403)
+                course = courses.get(id=request.POST.get("course_id"))
+                title = request.POST.get("title")
+                date_available = get_datetime(request.POST.get("date_available"))
+                deadline = get_datetime(request.POST.get("deadline"))
+
+                now = make_aware(datetime.datetime.now())
+                try:
+                    Exam.objects.get(title=title)  # check if exists
+                    return error(request, "exam with this name already exists", 403)
+                except:
+                    pass
+                if title == None or title.strip() == "":
+                    return error(request, "the exam title is emty", 403)
+                if deadline < date_available:
+                    return error(request, "the deadline of the exam is before date available", 403)
+                if deadline < now:
+                    return error(request, "the deadline of the exam is in the past", 403)
+
+                exam = Exam.objects.create(
+                    title=title, course=course, date_available=date_available, deadline=deadline)
+
+                # get questions
+                counter = 0
+                while True:
+                    if ("question_" + str(counter)) in request.POST:
+                        question = Question.objects.create(
+                            content=request.POST.get("question_" + str(counter)),
+                            choice_0=request.POST.get(
+                                "answer_" + str(counter) + "_0"),
+                            choice_1=request.POST.get(
+                                "answer_" + str(counter) + "_1"),
+                            choice_2=request.POST.get(
+                                "answer_" + str(counter) + "_2"),
+                            choice_3=request.POST.get(
+                                "answer_" + str(counter) + "_3"),
+                            choice_4=request.POST.get(
+                                "answer_" + str(counter) + "_4"),
+                            correct_answer=int(request.POST.get(
+                                "correct_answer_" + str(counter)))
+                        )
+                        question.save()
+                        exam.questions.add(question)
+                        counter += 1
+                    else:
+                        break
+                exam.save()
+                return redirect(reverse('exam_network:exams'))
             except:
-                pass
-            if title == None or title.strip() == "":
-                return error(request, "the exam title is emty", 403)
-            if deadline < date_available:
-                return error(request, "the deadline of the exam is before date available", 403)
-            if deadline < now:
-                return error(request, "the deadline of the exam is in the past", 403)
-
-            exam = Exam.objects.create(
-                title=title, course=course, date_available=date_available, deadline=deadline)
-
-            # get questions
-            counter = 0
-            while True:
-                if ("question_" + str(counter)) in request.POST:
-                    question = Question.objects.create(
-                        content=request.POST.get("question_" + str(counter)),
-                        choice_0=request.POST.get(
-                            "answer_" + str(counter) + "_0"),
-                        choice_1=request.POST.get(
-                            "answer_" + str(counter) + "_1"),
-                        choice_2=request.POST.get(
-                            "answer_" + str(counter) + "_2"),
-                        choice_3=request.POST.get(
-                            "answer_" + str(counter) + "_3"),
-                        choice_4=request.POST.get(
-                            "answer_" + str(counter) + "_4"),
-                        correct_answer=int(request.POST.get(
-                            "correct_answer_" + str(counter)))
-                    )
-                    question.save()
-                    exam.questions.add(question)
-                    counter += 1
-                else:
-                    break
-            exam.save()
-            return redirect(reverse('exam_network:exams'))
-            # except:
-            # return error(request, "you do not have permission to add exam into this course", 403)
+                return error(request, "you do not have permission to add exam into this course", 403)
     else:
         return render(request, 'exam_network/add_exam.html', {"courses": get_courses(request)})
 
