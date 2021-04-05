@@ -87,7 +87,7 @@ def get_exams(request, courses):
         return Exam.objects.none()
     if request.user.profile.role == "T":
         return Exam.objects.filter(course__in=courses).order_by("date_available")
-        
+
     #else return for students
     now = datetime.datetime.now()
     return Exam.objects.filter(course__in=courses, deadline__gte=now).order_by("date_available")
@@ -404,7 +404,10 @@ def exams(request, id=None):
         # this id is an exam
         exam = None
         try:
-            exam = exams.get(id=id, date_available__lte=now, deadline__gt=now)
+            if request.user.profile.role == "T":
+                exam = exams.get(id=id)
+            else:
+                exam = exams.get(id=id, date_available__lte=now, deadline__gt=now)
         except:
             return error(request, "this exam does not exist", 403)
 
