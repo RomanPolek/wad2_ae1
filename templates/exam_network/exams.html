@@ -7,7 +7,7 @@
         {%for course in courses%}
             <a href="{%url 'exam_network:exams' course.id%}"><button class="blue_button {%if current_course == course%}selected{%endif%}">{{course.name}}</button></a>
         {%endfor%}
-        <div id="statistics" class="black_border">
+        <div id="statistics" class="black_border" {%if user_role != "S"%}style="visibility:hidden;"{%endif%}>
             <h1>Statistics</h1>
             <div>
                 <h5>Your Performance</h5>
