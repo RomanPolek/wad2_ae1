@@ -133,49 +133,6 @@ def user_logout(request):
         logout(request)
         return redirect(reverse('exam_network:index'))
 
-
-def show_exams(request, course_name):
-    context_dict = {}
-    try:
-        course = Course.objects.get(name=course_name)
-        exams = Exam.objects.filter(course=course)
-        context_dict['course'] = course
-        context_dict['exams'] = exams
-
-    except Course.DoesNotExist:
-        context_dict['course'] = None
-        context_dict['exams'] = None
-    return render(request, 'exam_network/exams.html', context=context_dict)
-
-
-def show_exam(request, exam_name):
-    context_dict = {}
-    try:
-        # TODO: modify the ER Diagram and models to include exam name
-        exam = Exam.objects.get(exam=exam_name)
-        questions = Question.objects.filter(exam=exam)
-        context_dict['exam'] = exam
-        context_dict['questions'] = questions
-
-    except Exam.DoesNotExist:
-        context_dict['exams'] = None
-        context_dict['questions'] = None
-    return render(request, 'exam_network/exam.html', context=context_dict)
-
-
-def show_submissions(request, course_name):
-    context_dict = {}
-    try:
-        course = Course.objects.get(name=course_name)
-        exams = Exam.objects.filter(course=course)
-        submissions = Submission.objects.filter(
-            student=request.user).filter(exam=exams)
-        context_dict['submissions'] = submissions
-    except Course.DoesNotExist:
-        context_dict['submissions'] = None
-    return render(request, 'exam_network/results.html', context=context_dict)
-
-
 def add_course(request):
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
@@ -331,10 +288,30 @@ def exams(request, id=None):
         return error(request, "you are not logged in", 403)
     elif len(exams.filter(id=id)) != 0:
         # this id is an exam
+        exam = None
         try:
-            return render(request, 'exam_network/exam.html', {"exam": exams.get(id=id, date_available__lte=now, deadline__gt=now)})
+            exam = exams.get(id=id, date_available__lte=now, deadline__gt=now)
         except:
             return error(request, "this exam does not exist", 403)
+
+        if request.method == "POST":
+            #received submission
+            counter = 0
+            score = 0
+            max_score = len(exam.questions.all())
+            choices = []
+            while True:
+                if ("question_" + counter) in request.POST:
+                    current = request.POST.get("question_" + counter)
+                    if current == exam.questions.all()[counter].correct_answer:
+                        score += 1
+                    choices.append(current)
+                    counter += 1
+                else:
+                    break
+            return render(request, 'exam_network/exam.html', {"exam": exam, "choices": choices, "score": score, "max_score": max_score})
+        else:
+            return render(request, 'exam_network/exam.html', {"exam": exam})
 
     # if the id is course filter exams based on this course
     try:
