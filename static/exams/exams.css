@@ -111,3 +111,45 @@
     font-size: 0.9em !important;
     font-weight: 400 !important;
 }
+
+#student_list {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+#student_list h1 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: large;
+    display: inline-block;
+}
+
+#student_list * {
+    margin: 10px;
+}
+
+#student_list div {
+    margin: 0;
+    vertical-align: middle;
+}
+
+#student_list div span {
+    padding-left: 10px;
+}
+
+#student_list button {
+    margin: 0;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    font-size: small;
+}
+
+#student_list form {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+#student_list p {
+    display: inline-block;
+}

@@ -1,5 +1,6 @@
 from django import template
 from exam_network.models import Submission, Exam
+from django.contrib.auth.models import User
 register = template.Library()
 
 
