@@ -52,13 +52,13 @@
                         </a>
                     {% elif user_role == "T" %}
                         <a href="{%url 'exam_network:exams' exam.id%}">
-                            <button class="blue_button">View</button>
+                            <button class="blue_button" style="width: 130px;">View</button>
                         </a>
                         <a href="{%url 'exam_network:exam_remove' exam.id%}">
-                            <button class="gray_button">Remove</button>
+                            <button class="gray_button" style="transform: scale(0.7);">Remove</button>
                         </a>
                         <a href="{%url 'exam_network:exam_edit' exam.id%}">
-                            <button class="blue_button">Edit</button>
+                            <button class="blue_button" style="width: 130px;">Edit</button>
                         </a>
                     {% endif %}
                 </div>
