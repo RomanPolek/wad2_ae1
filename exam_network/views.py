@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 import datetime
 from django.utils.timezone import make_aware
+import json
 
 
 def error(request, message, error):
@@ -133,6 +134,7 @@ def user_logout(request):
         logout(request)
         return redirect(reverse('exam_network:index'))
 
+
 def add_course(request):
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
@@ -212,6 +214,10 @@ def get_datetime(datetime_string):
     return make_aware(result)
 
 
+def datetime_str(date):
+    return date.strftime("%Y-%m-%dT%H:%M")
+
+
 def add_exam(request):
     if request.method == "POST":
         courses = get_courses(request)
@@ -284,7 +290,94 @@ def exam_result(request):
     return render(request, 'exam_network/exam_result.html')
 
 
+def exam_edit(request, id):
+    if not request.user.is_authenticated:
+        return error(request, "you are not logged in", 403)
+
+    if request.user.profile.role != "T":
+        return error(request, "you do not have permission to edit this exam", 403)
+
+    if request.method == "POST":
+        try:
+            title = request.POST.get("title")
+            date_available = get_datetime(
+                request.POST.get("date_available"))
+            deadline = get_datetime(request.POST.get("deadline"))
+
+            now = make_aware(datetime.datetime.now())
+
+            if title == None or title.strip() == "":
+                return error(request, "the exam title is emty", 403)
+            if deadline < date_available:
+                return error(request, "the deadline of the exam is before date available", 403)
+            if deadline < now:
+                return error(request, "the deadline of the exam is in the past", 403)
+
+            exam = Exam.objects.get(id=id)
+            exam.title = title
+            exam.date_available = date_available
+            exam.deadline = deadline
+
+            # clear old questions
+            exam.questions.clear()
+            # get new questions
+            counter = 0
+            while True:
+                if ("question_" + str(counter)) in request.POST:
+                    question = Question.objects.create(
+                        content=request.POST.get(
+                            "question_" + str(counter)),
+                        choice_0=request.POST.get(
+                            "answer_" + str(counter) + "_0"),
+                        choice_1=request.POST.get(
+                            "answer_" + str(counter) + "_1"),
+                        choice_2=request.POST.get(
+                            "answer_" + str(counter) + "_2"),
+                        choice_3=request.POST.get(
+                            "answer_" + str(counter) + "_3"),
+                        choice_4=request.POST.get(
+                            "answer_" + str(counter) + "_4"),
+                        correct_answer=int(request.POST.get(
+                            "correct_answer_" + str(counter)))
+                    )
+                    question.save()
+                    exam.questions.add(question)
+                    counter += 1
+                else:
+                    break
+
+            exam.save()
+            return redirect(reverse('exam_network:exams'))
+        except:
+            return error(request, "you do not have permission to edit an exam in this course", 403)
+    else:
+        try:
+            exam = Exam.objects.get(id=id)
+
+            questions = [{"content": q.content, "correct": q.correct_answer,
+                          "0": q.choice_0, "1": q.choice_1, "2": q.choice_2, "3": q.choice_3, "4": q.choice_4,
+                          } for q in list(exam.questions.all())]
+
+            context_dict = {
+                "exam": exam,
+                "available": datetime_str(exam.date_available),
+                "deadline": datetime_str(exam.deadline),
+                "questions": json.dumps(questions),
+            }
+        except:
+            return error(request, 'exam was not found', 403)
+
+    return render(request, 'exam_network/edit_exam.html', context_dict)
+
+
 def exam_remove(request, id):
+    # TODO: check if the teacher is teaching the subject for this exam?
+    if not request.user.is_authenticated:
+        return error(request, "you are not logged in", 403)
+
+    if request.user.profile.role != "T":
+        return error(request, "you do not have permission to remove this exam", 403)
+
     try:
         exam = Exam.objects.get(id=id).delete()
     except:
@@ -311,12 +404,13 @@ def exams(request, id=None):
 
         submission = None
         try:
-            submission = Submission.objects.get(exam=exam, student=request.user) #check if submission exists
+            submission = Submission.objects.get(
+                exam=exam, student=request.user)  # check if submission exists
         except:
             pass
-            
+
         if request.method == "POST" and request.user.profile.role == "S" and submission == None:
-            #received submission
+            # received submission
             counter = 0
             score = 0
             max_score = len(exam.questions.all())
@@ -332,11 +426,13 @@ def exams(request, id=None):
                     break
             if len(choices) != len(exam.questions.all()):
                 return error(request, "there was a problem with your submission. This submission is not counted. Please try again", 403)
-            #save the result
+            # save the result
             percentage = round(score / max_score * 10000) / 100
-            submission = Submission.objects.create(exam=exam, student=request.user, score = score, max_score=max_score, percentage=percentage)
+            submission = Submission.objects.create(
+                exam=exam, student=request.user, score=score, max_score=max_score, percentage=percentage)
             for i in range(len(choices)):
-                answer = Answer.objects.create(question=exam.questions.all()[i], answer=choices[i])
+                answer = Answer.objects.create(
+                    question=exam.questions.all()[i], answer=choices[i])
                 answer.save()
                 submission.answers.add(answer)
             submission.save()
