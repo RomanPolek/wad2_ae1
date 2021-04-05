@@ -284,6 +284,15 @@ def exam_result(request):
     return render(request, 'exam_network/exam_result.html')
 
 
+def exam_remove(request, id):
+    try:
+        exam = Exam.objects.get(id=id).delete()
+    except:
+        pass
+
+    return redirect(reverse('exam_network:exams'))
+
+
 def exams(request, id=None):
     # get the available exams
     courses = get_courses(request)

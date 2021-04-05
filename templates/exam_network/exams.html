@@ -33,6 +33,7 @@
         <p class="text" style="text-align: center;">Looks like there are no exams in {%if current_course%}course {{current_course.name}}{%else%}your courses{%endif%}</p>
         {%endif%}
         {%for exam in exams%}
+            <!-- BUG: formatting seems to break if this <a> is removed, no idea why -->
             {%get_submission request.user exam as submission%}
             <a {%if exam.date_available < now%}href="{%url 'exam_network:exams' exam.id%}"{%endif%}>
                 <div class="black_border" {%if exam.date_available > now%}style="color:gray;"{%endif%}>
@@ -48,11 +49,18 @@
                         <span>Deadline: <b>{{exam.deadline}}</b></span>
 
                         {% if user_role == "S" %}
-                            <button class="{%if submission%}gray_button{%else%}blue_button{%endif%}" {%if exam.date_available > now%}style="visibility:hidden;"{%endif%}>{%if submission%}Review{%else%}Start{%endif%}</button>
+                            <a {%if exam.date_available < now%}href="{%url 'exam_network:exams' exam.id%}"{%endif%}>
+                                <button class="{%if submission%}gray_button{%else%}blue_button{%endif%}" {%if exam.date_available > now%}style="visibility:hidden;"{%endif%}>{%if submission%}Review{%else%}Start{%endif%}</button>
+                            </a>
                         {% elif user_role == "T" %}
-                            <button class="blue_button">View</button>
+                            <!-- BUG: wrapping any of the buttons in <a> tags also breaks formatting -->
+                            <a href="{%url 'exam_network:exams' exam.id%}">
+                                <button class="blue_button">View</button>
+                            </a>
                             <button class="blue_button">Edit</button>
-                            <button class="blue_button">Remove</button>
+                            <a href="{%url 'exam_network:exam_remove' exam.id%}">
+                                <button class="blue_button">Remove</button>
+                            </a>
                         {% endif %}
                     </div>
                 </div>

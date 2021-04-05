@@ -19,4 +19,5 @@ urlpatterns = [
     path('account/', views.account, name='account'),
     path('exams/', views.exams, name='exams'),
     path('exams/<id>', views.exams, name='exams'),
+    path('exams/remove/<id>', views.exam_remove, name='exam_remove'),
 ]
