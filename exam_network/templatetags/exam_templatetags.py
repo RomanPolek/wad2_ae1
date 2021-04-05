@@ -1,5 +1,5 @@
 from django import template
-from exam_network.models import Submission
+from exam_network.models import Submission, Exam
 register = template.Library()
 
 
@@ -31,8 +31,12 @@ def get_all_submission(exam):
         return None
 
 @register.simple_tag
-def get_student_performance(user):
-    submissions = Submission.objects.filter(student=user)
+def get_student_performance(user, course):
+    submissions = None
+    if course != None:
+        submissions = Submission.objects.filter(student=user, exam__in=Exam.objects.filter(course=course))
+    else:
+        submissions = Submission.objects.filter(student=user)
     maximum = 0
     minimum = 100
     average = 0
@@ -53,7 +57,7 @@ def get_student_performance(user):
 def get_course_performance(course):
     course_performance = [0,0,0,0]
     for student in course.students.all():
-        current = get_student_performance(student)
+        current = get_student_performance(student, course)
         course_performance[0] += current[0]
         course_performance[1] += current[1]
         course_performance[2] += current[2]
