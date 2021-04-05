@@ -22,7 +22,7 @@
     margin: 10px;
     padding: 20px;
     display: inline-block;
-    height: 500px;
+    min-height: 500px;
     vertical-align: middle;
 }
 
