@@ -7,7 +7,7 @@
         {%for course in courses%}
             <a href="{%url 'exam_network:exams' course.id%}"><button class="blue_button {%if current_course == course%}selected{%endif%}">{{course.name}}</button></a>
         {%endfor%}
-        <div id="statistics" class="black_border">
+        <div id="statistics" class="black_border" {%if user_role != "S"%}style="visibility:hidden;"{%endif%}>
             <h1>Statistics</h1>
             <div>
                 <h5>Your Performance</h5>
@@ -35,12 +35,21 @@
             <a {%if exam.date_available < now%}href="{%url 'exam_network:exams' exam.id%}"{%endif%}>
                 <div class="black_border" {%if exam.date_available > now%}style="color:gray;"{%endif%}>
                     <h1>{{exam.title}}</h1>
-                    <p>Your Score: </p><span>97%</span><br>
-                    <p>Your Grade: </p><span>A</span><br>
+                    {% if user_role == "S" %}
+                        <p>Your Score: </p><span>97%</span><br>
+                        <p>Your Grade: </p><span>A</span><br>
+                    {% endif %}
                     <div style="text-align: right;" class="exam_bottom">
-                        <span>open from: <b>{{exam.date_available}}</b></span>
-                        <span>deadline: <b>{{exam.deadline}}</b></span>
-                        <button class="blue_button" {%if exam.date_available > now%}style="visibility:hidden;"{%endif%}>Start</button>
+                        <span>Open from: <b>{{exam.date_available}}</b></span>
+                        <span>Deadline: <b>{{exam.deadline}}</b></span>
+
+                        {% if user_role == "S" %}
+                            <button class="blue_button" {%if exam.date_available > now%}style="visibility:hidden;"{%endif%}>Start</button>
+                        {% elif user_role == "T" %}
+                            <button class="blue_button">View</button>
+                            <button class="blue_button">Edit</button>
+                            <button class="blue_button">Remove</button>
+                        {% endif %}
                     </div>
                 </div>
             </a>

@@ -8,7 +8,7 @@
         {%csrf_token%}
         <div class="input_row">
             <span>Select Course</span>
-            <select name="course_name">
+            <select name="course_id" required>
                 {%for option in courses%}
                     <option value="{{option.id}}">{{option.name}}</option>
                 {%endfor%}
@@ -16,7 +16,7 @@
         </div>
         <div class="input_row">
             <span>Student emails<br>(comma separated)</span>
-            <textarea name="details" cols="30" rows="6" style="resize: none;"></textarea>
+            <textarea name="students" cols="30" rows="6" style="resize: none;" required></textarea>
         </div>
         <button type="submit" class="blue_button" style="margin-top: 30px; float: right;">Add</button>
     </form>
