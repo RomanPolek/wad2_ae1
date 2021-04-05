@@ -346,7 +346,7 @@ def exams(request, id=None):
             print("max_score:", max_score)
             print(choices)
             print("-----------------------")
-        elif request.user.profile.role == "T":
+        elif request.method == "POST" and request.user.profile.role == "T":
             return error(request, "you do not have permission to submit an exam as a teacher", 403)
         elif request.method == "POST" and submission != None:
             return error(request, "this exam was already submitted by you", 403)
