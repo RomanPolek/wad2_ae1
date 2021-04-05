@@ -20,8 +20,8 @@
         </div>
         <div class="input_row">
             <span>I am </span>
-            <label><input type="radio" name="role" value="S" {%if user.profile.role == "S"%}checked="checked"{%endif%}> student</label>
-            <label style="padding-left: 20px;"><input type="radio" name="role" value="T" {%if user.profile.role == "T"%}checked="checked"{%endif%}> teacher</label>
+            <label><input type="radio" name="role" value="S" {%if user.profile.role == "S"%}checked="checked"{%endif%} disabled> student</label>
+            <label style="padding-left: 20px;"><input type="radio" name="role" value="T" {%if user.profile.role == "T"%}checked="checked"{%endif%} disabled> teacher</label>
         </div>
         <div class="input_row">
             <span>Change Password</span>
