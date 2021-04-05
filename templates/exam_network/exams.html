@@ -8,7 +8,7 @@
         {%for course in courses%}
             <a href="{%url 'exam_network:exams' course.id%}"><button class="blue_button {%if current_course == course%}selected{%endif%}">{{course.name}}</button></a>
         {%endfor%}
-        <div id="statistics" class="black_border">
+        <div id="statistics" class="black_border" {%if request.user.profile.role != "S" and not current_course%}style="visibility:hidden"{%endif%}>
             {%get_student_performance user current_course as student_performance%}
             <h1>Cummulative Statistics</h1>
             {%if request.user.profile.role == "S"%}

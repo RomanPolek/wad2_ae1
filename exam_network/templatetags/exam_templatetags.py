@@ -37,9 +37,9 @@ def get_student_performance(user, course):
         submissions = Submission.objects.filter(student=user, exam__in=Exam.objects.filter(course=course))
     else:
         submissions = Submission.objects.filter(student=user)
-    maximum = 0
-    minimum = 100
-    average = 0
+    maximum = 0.0
+    minimum = 100.0
+    average = 0.0
     for submission in submissions:
         if submission.percentage > maximum:
             maximum = submission.percentage
@@ -55,7 +55,7 @@ def get_student_performance(user, course):
 
 @register.simple_tag
 def get_course_performance(course):
-    course_performance = [0,0,0,0]
+    course_performance = [0.0,0.0,0.0,0]
     for student in course.students.all():
         current = get_student_performance(student, course)
         course_performance[0] += current[0]
