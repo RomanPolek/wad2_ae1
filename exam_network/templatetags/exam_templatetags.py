@@ -66,8 +66,6 @@ def get_course_performance(course):
         course_performance[2] += current[2]
     course_performance[3] = len(course.students.all())
     if course_performance[3] > 0:
-        course_performance[0] /= course_performance[3]
-        course_performance[1] /= course_performance[3]
         course_performance[2] /= course_performance[3]
     return course_performance
 
