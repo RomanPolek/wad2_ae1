@@ -70,3 +70,7 @@ def get_course_performance(course):
         course_performance[1] /= course_performance[3]
         course_performance[2] /= course_performance[3]
     return course_performance
+
+@register.simple_tag
+def exam_display_result(user, user_choice):
+    return (user_choice != "" or user.profile.role == 'T') and user_choice != -1
