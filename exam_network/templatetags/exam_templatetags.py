@@ -31,6 +31,9 @@ def get_all_submission(exam):
     except:
         return None
 
+def round_two_decimal(x):
+    return round(x * 100) / 100
+
 @register.simple_tag
 def get_student_performance(user, course):
     submissions = None
@@ -52,7 +55,7 @@ def get_student_performance(user, course):
     else:
         minimum = 0
     
-    return [maximum, minimum, average]
+    return [round_two_decimal(maximum), round_two_decimal(minimum), round_two_decimal(average)]
 
 @register.simple_tag
 def get_course_performance(course):
@@ -67,6 +70,10 @@ def get_course_performance(course):
     course_performance[3] = len(course.students.all())
     if course_performance[3] > 0:
         course_performance[2] /= course_performance[3]
+
+    course_performance[0] = round_two_decimal(course_performance[0])
+    course_performance[1] = round_two_decimal(course_performance[1])
+    course_performance[2] = round_two_decimal(course_performance[2])
     return course_performance
 
 @register.simple_tag
