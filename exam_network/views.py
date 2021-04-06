@@ -90,7 +90,17 @@ def get_exams(request, courses):
 
     # else return for students
     now = datetime.datetime.now()
-    return Exam.objects.filter(course__in=courses, deadline__gte=now).order_by("date_available")
+    # Titles of exams the Student has submissions for
+    student_submissions = Submission.objects.filter(
+        student=request.user).values_list('exam__title')
+    # Exams the Student has submissions for
+    student_submissions = Exam.objects.filter(
+        course__in=courses, title__in=student_submissions)
+    # Student's upcoming exams
+    student_upcoming = Exam.objects.filter(
+        course__in=courses, deadline__gte=now)
+    # OR operator combines two queries into either submitted or upcoming exams
+    return (student_submissions | student_upcoming).order_by("date_available")
 
 
 def signup(request):
@@ -412,11 +422,7 @@ def exams(request, id=None):
         # this id is an exam
         exam = None
         try:
-            if request.user.profile.role == "T":
-                exam = exams.get(id=id)
-            else:
-                exam = exams.get(
-                    id=id, date_available__lte=now, deadline__gt=now)
+            exam = exams.get(id=id)
         except:
             return error(request, "this exam does not exist", 403)
 
