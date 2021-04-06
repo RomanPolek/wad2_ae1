@@ -34,7 +34,7 @@ def get_all_submission(exam):
 @register.simple_tag
 def get_student_performance(user, course):
     submissions = None
-    if course != None:
+    if course:
         submissions = Submission.objects.filter(student=user, exam__in=Exam.objects.filter(course=course))
     else:
         submissions = Submission.objects.filter(student=user)
