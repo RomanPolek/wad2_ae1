@@ -154,6 +154,7 @@ body {
     margin: 0;
     overflow-x: hidden;
     background-color: rgb(168,206,255);
+    min-width: 650px;
 }
 
 #page_content {
