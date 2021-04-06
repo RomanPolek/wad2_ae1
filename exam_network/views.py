@@ -88,7 +88,7 @@ def get_exams(request, courses):
     if request.user.profile.role == "T":
         return Exam.objects.filter(course__in=courses).order_by("date_available")
 
-    #else return for students
+    # else return for students
     now = datetime.datetime.now()
     return Exam.objects.filter(course__in=courses, deadline__gte=now).order_by("date_available")
 
@@ -401,14 +401,22 @@ def exams(request, id=None):
     now = make_aware(datetime.datetime.now())
     if not request.user.is_authenticated:
         return error(request, "you are not logged in", 403)
-    elif len(exams.filter(id=id)) != 0:
+
+    # Remove Student from the course if 'x' was clicked by teacher
+    if request.method == "POST" and request.user.profile.role == "T" and request.POST.get("user_delete"):
+        email = request.POST.get("user_delete")
+        student = User.objects.get(username=email, profile__role='S')
+        courses.get(id=id).students.remove(student)
+
+    if len(exams.filter(id=id)) != 0:
         # this id is an exam
         exam = None
         try:
             if request.user.profile.role == "T":
                 exam = exams.get(id=id)
             else:
-                exam = exams.get(id=id, date_available__lte=now, deadline__gt=now)
+                exam = exams.get(
+                    id=id, date_available__lte=now, deadline__gt=now)
         except:
             return error(request, "this exam does not exist", 403)
 
