@@ -43,7 +43,10 @@
                 {%for student in current_course.students.all%}
                     <div>
                         <p>{{student.email}}</p>
-                        <form method="POST"><input type="hidden" name="user" value="{{student.email}}"><button class="gray_button">X</button></form>
+                        <form method="POST">
+                            {%csrf_token%}
+                            <input type="hidden" name="user_delete" value="{{student.email}}"><button class="gray_button">X</button>
+                        </form>
                     </div>
                 {%endfor%}
             </div>
